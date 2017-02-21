@@ -1,0 +1,20 @@
+package com.mayorgraeme.animal.util;
+
+import java.util.List;
+import java.util.Random;
+
+/**
+ * Created by graememiller on 21/02/2017.
+ */
+public class RandomUtil {
+
+    private static Random random = new Random();
+
+
+    public static <G> G getRandomFromList(List<G> list){
+
+        Random rnd = new Random();
+        int i = rnd.nextInt(list.size());
+        return list.get(i);
+    }
+}

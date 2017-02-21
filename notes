@@ -1,0 +1,34 @@
+A grid is a biome. A world is made up of multiple biomes.
+
+Animals at the edge can transfer between biomes in groups.
+
+Biome:
+- Temperature, Flora
+- 30*30 grid
+
+Animal:
+- have points in energy
+- are either carnivore or herbivore
+- can spend on:
+    first
+        - gestation speed
+        - litter size
+        - metabolism
+        - attack
+        - defence
+        - time to eat
+        - time to sleep
+        - speed
+        - risk taking?
+    later:
+        - solitary/group
+        - likelihood of biome transfer
+- Actions:
+    - Eat food/eat other animal
+    - Mate
+    - Sleep
+    - Move Random
+
+Breeding:
+- each animal has a species ID and can only breed within there
+
