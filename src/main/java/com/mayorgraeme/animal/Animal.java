@@ -11,11 +11,35 @@ import com.mayorgraeme.biome.Inhabitant;
  */
 public interface Animal extends Inhabitant {
 
-    public List<Action> getActions();
+    List<Action> getActions();
 
-    public int getMoveSpeed();
+    int getMoveSpeed();
 
-    public UUID getId();
+    UUID getId();
 
-    public UUID getSpeciesId();
+    UUID getSpeciesId();
+
+    boolean isPregnant();
+
+    void setPregnant(boolean isPregnant);
+
+    int getMaturityAge();
+
+    int getGestationSpeed();
+
+    int getLitterSize();
+
+    int getMaxAge();
+
+    int getAge();
+
+    void setAge(int age);
+
+    Sex getSex();
+
+    Diet getDiet();
+
+    int getPregnancyCountdown();
+
+    void setPregnancyCountdown(int pregnancyCountdown);
 }

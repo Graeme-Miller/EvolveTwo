@@ -13,14 +13,13 @@ Animal:
     first
         - gestation speed
         - litter size
-        - metabolism
+        - metabolism/time to eat
         - attack
         - defence
-        - time to eat
-        - time to sleep
         - speed
-        - risk taking?
     later:
+        - chance to move to new biome
+        - time to sleep
         - solitary/group
         - likelihood of biome transfer
 - Actions:

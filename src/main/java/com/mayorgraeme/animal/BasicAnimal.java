@@ -16,22 +16,48 @@ public class BasicAnimal implements Animal {
     private int moveSpeed;
     private UUID id;
     private UUID speciesId;
+    private boolean isPregnant;
+    private int pregnancyCountdown;
+    private int maturityAge;
+    private int gestationSpeed;
+    private int litterSize;
+    private int maxAge;
+    private int age;
 
-    public BasicAnimal(Sex sex, Diet diet, List<Action> actions, int moveSpeed, UUID id, UUID speciesId) {
+    public BasicAnimal(Sex sex, Diet diet, List<Action> actions, int moveSpeed, UUID speciesId, boolean isPregnant, int pregnancyCountdown, int maturityAge, int gestationSpeed, int litterSize, int maxAge, int age) {
         this.sex = sex;
         this.diet = diet;
         this.actions = actions;
         this.moveSpeed = moveSpeed;
-        this.id = id;
+        this.id = UUID.randomUUID();
         this.speciesId = speciesId;
+        this.isPregnant = isPregnant;
+        this.pregnancyCountdown = pregnancyCountdown;
+        this.maturityAge = maturityAge;
+        this.gestationSpeed = gestationSpeed;
+        this.litterSize = litterSize;
+        this.maxAge = maxAge;
+        this.age = age;
     }
 
+    @Override
     public Sex getSex() {
         return sex;
     }
 
+    @Override
     public Diet getDiet() {
         return diet;
+    }
+
+    @Override
+    public int getPregnancyCountdown() {
+        return pregnancyCountdown;
+    }
+
+    @Override
+    public void setPregnancyCountdown(int pregnancyCountdown) {
+        this.pregnancyCountdown = pregnancyCountdown;
     }
 
     @Override
@@ -53,6 +79,48 @@ public class BasicAnimal implements Animal {
     public UUID getSpeciesId() {
         return speciesId;
     }
+
+    @Override
+    public boolean isPregnant() {
+        return isPregnant;
+    }
+
+    @Override
+    public void setPregnant(boolean isPregnant) {
+        this.isPregnant = isPregnant;
+    }
+
+    @Override
+    public int getMaturityAge() {
+        return maturityAge;
+    }
+
+    @Override
+    public int getGestationSpeed() {
+        return gestationSpeed;
+    }
+
+    @Override
+    public int getLitterSize() {
+        return litterSize;
+    }
+
+    @Override
+    public int getMaxAge() {
+        return maxAge;
+    }
+
+    @Override
+    public int getAge() {
+        return age;
+    }
+
+    @Override
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

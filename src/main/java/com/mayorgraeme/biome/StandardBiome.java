@@ -13,7 +13,6 @@ import java.util.function.Function;
 
 import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.animal.util.Coordinate;
-import com.mayorgraeme.animal.util.RandomUtil;
 
 /**
  * Created by graememiller on 19/02/2017.
