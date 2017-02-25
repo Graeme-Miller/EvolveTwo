@@ -10,10 +10,10 @@ import com.mayorgraeme.animal.util.Coordinate;
  */
 public interface Biome {
     void process();
-    Animal[][] getAnimalMap();
+    Inhabitant[][] getInhabitantMap();
     void moveAnimal(Animal animal, Coordinate to);
     void removeAnimal(Animal animal);
     void addAnimal(Animal animal, Coordinate coordinate);
     void loopOverEmpty(Animal animal, int size, Function<Coordinate, Boolean> function);
-    void loopOverAnimal(Animal animal, int size, Function<Animal, Boolean> function);
+    void loopOverInhabitant(Animal animal, int size, Function<Inhabitant, Boolean> function);
 }

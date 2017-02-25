@@ -68,4 +68,9 @@ public class BasicAnimal implements Animal {
     public int hashCode() {
         return id.hashCode();
     }
+
+    @Override
+    public String getIdentifier() {
+        return getSpeciesId().toString().substring(0, 2);
+    }
 }

@@ -24,7 +24,7 @@ public class App {
 
         Display textDisplay = new TextDisplay();
 
-        Biome biome = new StandardBiome(30, 30);
+        Biome biome = new StandardBiome(30, 30, 10, 10 ,10);
 
         UUID speciesUUID = UUID.randomUUID();
         for (int x = 0; x < 10; x++) {
@@ -41,8 +41,7 @@ public class App {
 
 
             biome.process();
-            System.out.println("Process done");
-            textDisplay.display(biome.getAnimalMap());
+            textDisplay.display(biome.getInhabitantMap());
         }
 
     }
