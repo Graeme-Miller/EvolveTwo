@@ -6,8 +6,8 @@ import java.util.List;
 import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.animal.BasicAnimal;
 import com.mayorgraeme.animal.Sex;
-import com.mayorgraeme.animal.util.Coordinate;
-import com.mayorgraeme.animal.util.RandomUtil;
+import com.mayorgraeme.util.Coordinate;
+import com.mayorgraeme.util.RandomUtil;
 import com.mayorgraeme.biome.Biome;
 
 /**
@@ -83,6 +83,10 @@ public class MateAction implements Action {
     public boolean performMatingAction(Animal animal, Biome biome){
 
         biome.loopOverInhabitant(animal, animal.getMoveSpeed(), inhabitant -> {
+
+            return false;
+        }
+
             if(!(inhabitant instanceof  Animal))
                 return false;
 
@@ -104,7 +108,6 @@ public class MateAction implements Action {
             }
 
             return  false;
-        });
 
 
         return true;  //TODO: returning false here means that if you can breed, you must, and wont get any other actions

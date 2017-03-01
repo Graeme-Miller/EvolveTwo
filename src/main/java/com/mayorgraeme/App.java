@@ -1,7 +1,6 @@
 package com.mayorgraeme;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +11,7 @@ import com.mayorgraeme.animal.action.Action;
 import com.mayorgraeme.animal.action.AgeAction;
 import com.mayorgraeme.animal.action.MateAction;
 import com.mayorgraeme.animal.action.RandomMove;
-import com.mayorgraeme.animal.util.Coordinate;
+import com.mayorgraeme.util.Coordinate;
 import com.mayorgraeme.biome.Biome;
 import com.mayorgraeme.biome.StandardBiome;
 import com.mayorgraeme.display.Display;

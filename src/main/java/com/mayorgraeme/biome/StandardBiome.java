@@ -1,18 +1,24 @@
 package com.mayorgraeme.biome;
 
-import static com.mayorgraeme.animal.util.RandomUtil.getRandomFromList;
-import static com.mayorgraeme.animal.util.RandomUtil.shouldPeformAction;
+import static com.mayorgraeme.util.RandomUtil.getRandomFromList;
+import static com.mayorgraeme.util.RandomUtil.shouldPeformAction;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.Optional;
+import java.util.Spliterator;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import com.mayorgraeme.animal.Animal;
-import com.mayorgraeme.animal.util.Coordinate;
+import com.mayorgraeme.animal.InhabitantCoordinates;
+import com.mayorgraeme.util.Coordinate;
+import com.mayorgraeme.util.MatrixSubSpliterator;
 
 /**
  * Created by graememiller on 19/02/2017.
@@ -21,7 +27,7 @@ public class StandardBiome implements Biome {
 
     private Map<Animal, Coordinate> animalCoordinate;
     private Map<Vegetation, Coordinate> vegetationCoordinate;
-    private Inhabitant[][] grid;
+    private InhabitantCoordinates[][] grid;
     private int maximumX;
     private int maximumY;
 
@@ -37,9 +43,13 @@ public class StandardBiome implements Biome {
         this.vegetationMaxAge = vegetationMaxAge;
         this.vegetationNutrition = vegetationNutrition;
 
-        grid = new Inhabitant[maximumX][];
+        grid = new InhabitantCoordinates[maximumX][];
         for (int x = 0; x < maximumX; x++) {
-            grid[x] = new Inhabitant[maximumY];
+            grid[x] = new InhabitantCoordinates[maximumY];
+
+            for (int y = 0; y < maximumY; y++) {
+                grid[x][y] = new InhabitantCoordinates(x, y);
+            }
         }
 
         animalCoordinate = new HashMap<>();
@@ -65,18 +75,17 @@ public class StandardBiome implements Biome {
         //Vegetation process new
         if(shouldPeformAction(vegetationSpawnRate)) {
             List<Coordinate> coordinateList = new ArrayList<>();
-            loopOverEmpty(new Coordinate(0,0), maximumX*maximumY, coordinate -> {
-                coordinateList.add(coordinate);
-                return false;
-            } );
 
-            Coordinate randomFromList = getRandomFromList(coordinateList);
-            if(randomFromList != null) {
+            Stream<InhabitantCoordinates> inhabitantCoordinatesStream = getInhabitantCoordinatesStream(new Coordinate(0, 0), maximumX * maximumY);
+            Optional<InhabitantCoordinates> inhabitantOptional = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getAnimal() == null).findFirst();
+
+            if (inhabitantOptional.isPresent()) {
                 Vegetation vegetationNew = new Vegetation(0, vegetationNutrition);
-                grid[randomFromList.getX()][randomFromList.getY()] = vegetationNew;
-                vegetationCoordinate.put(vegetationNew, randomFromList);
+                grid[inhabitantOptional.get().getX()][inhabitantOptional.get().getY()].setAnimal(vegetationNew);
+                vegetationCoordinate.put(vegetationNew, new Coordinate(inhabitantOptional.get().getX(), inhabitantOptional.get().getY()));
             }
         }
+
 
         //Animal Process
         HashSet<Animal> animalsCopy = new HashSet<>(animalCoordinate.keySet());
@@ -90,7 +99,7 @@ public class StandardBiome implements Biome {
         }
     }
 
-    public Inhabitant[][] getInhabitantMap() {
+    public InhabitantCoordinates[][] getInhabitantMap() {
         return grid;
     }
 
@@ -119,66 +128,32 @@ public class StandardBiome implements Biome {
 
 
         animalCoordinate.put(animal,coordinate);
-        grid[coordinate.getX()][coordinate.getY()] = animal;
+        grid[coordinate.getX()][coordinate.getY()].setAnimal(animal);
     }
 
-    public void loopOverEmpty(Coordinate coordinate, int size, Function<Coordinate, Boolean> function) {
-        if(coordinate == null)
-            throw new IllegalArgumentException("loopOverEmpty but coord is null");
+    @Override
+    public Stream<InhabitantCoordinates> getInhabitantCoordinatesStream(Animal animal, int size) {
+        Coordinate coordinate = animalCoordinate.get(animal);
 
+        return getInhabitantCoordinatesStream(coordinate, size);
+    }
 
+    @Override
+    public Stream<InhabitantCoordinates> getInhabitantCoordinatesStream(Coordinate coordinate, int size) {
         int minX = Math.max(0, coordinate.getX()-size);
         int maxX = Math.min(maximumX, coordinate.getX()+size);
         int minY = Math.max(0, coordinate.getY()-size);
         int maxY = Math.min(maximumY, coordinate.getY()+size);
 
-        for (int x = minX; x < maxX; x++) {
-            for (int y = minY; y < maxY; y++) {
-                if( grid[x][y] == null ){
-                    Boolean stop = function.apply(new Coordinate(x, y));
-                    if(stop)
-                        return;
-                }
-            }
-        }
+        MatrixSubSpliterator<InhabitantCoordinates> spliterator = new MatrixSubSpliterator<>(grid, minX, maxX, minY, maxY);
+
+        return StreamSupport.stream(spliterator, false);
     }
-
-    @Override
-    public void loopOverEmpty(Animal animal, int size, Function<Coordinate, Boolean> function) {
-        Coordinate coordinate = animalCoordinate.get(animal);
-        if(coordinate == null)
-            throw new IllegalArgumentException("loopOverEmpty but coord is null");
-
-        loopOverEmpty(coordinate, size, function);
-    }
-
-    @Override
-    public void loopOverInhabitant(Animal animal, int size, Function<Inhabitant, Boolean> function) {
-        Coordinate coordinate = animalCoordinate.get(animal);
-        if(coordinate == null)
-            throw new IllegalArgumentException("loopOverEmpty but coord is null");
-
-        int minX = Math.max(0, coordinate.getX()-size);
-        int maxX = Math.min(maximumX, coordinate.getX()+size);
-        int minY = Math.max(0, coordinate.getY()-size);
-        int maxY = Math.min(maximumY, coordinate.getY()+size);
-
-        for (int x = minX; x < maxX; x++) {
-            for (int y = minY; y < maxY; y++) {
-                Inhabitant gridInhabitant = grid[x][y];
-
-                Boolean stop = function.apply(gridInhabitant);
-                if(stop)
-                    return;
-            }
-        }
-    }
-
 
     private void checkIfSpaceOccupiedAndThrowException(Coordinate coordinate){
-        Inhabitant occupyingInhabitant = grid[coordinate.getX()][coordinate.getY()];
-        if(occupyingInhabitant != null)
-            throw new IllegalArgumentException("Tried to add animal to occupied space. Coordinate "+ coordinate+" occupying inhabitant "+occupyingInhabitant);
+        InhabitantCoordinates inhabitantCoordinates = grid[coordinate.getX()][coordinate.getY()];
+        if(inhabitantCoordinates.getAnimal() != null)
+            throw new IllegalArgumentException("Tried to add animal to occupied space. Coordinate "+ coordinate+" occupying inhabitant "+inhabitantCoordinates);
     }
 
 

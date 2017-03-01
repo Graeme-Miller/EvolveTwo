@@ -1,4 +1,4 @@
-package com.mayorgraeme.animal.util;
+package com.mayorgraeme.util;
 
 /**
  * Created by graememiller on 19/02/2017.

@@ -1,4 +1,4 @@
-package com.mayorgraeme.animal.util;
+package com.mayorgraeme.util;
 
 import java.util.List;
 import java.util.Random;
