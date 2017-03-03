@@ -76,9 +76,9 @@ public class StandardBiome implements Biome {
 
 
             Stream<InhabitantCoordinates> inhabitantCoordinatesStream = getInhabitantCoordinatesStream(new Coordinate(0, 0), maximumX * maximumY);
+            List<InhabitantCoordinates> inhabitantCoordinatesList = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null).collect(Collectors.toList());
 
-            if(inhabitantCoordinatesStream.count() > 0) {
-                List<InhabitantCoordinates> inhabitantCoordinatesList = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null).collect(Collectors.toList());
+            if(!inhabitantCoordinatesList.isEmpty()) {
                 InhabitantCoordinates randomFromList = RandomUtil.getRandomFromList(inhabitantCoordinatesList);
                 Vegetation vegetationNew = new Vegetation(0, vegetationNutrition);
                 grid[randomFromList.getX()][randomFromList.getY()].setInhabitant(vegetationNew);

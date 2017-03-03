@@ -28,7 +28,7 @@ public class App {
 
         Display textDisplay = new TextDisplay();
 
-        Biome biome = new StandardBiome(30, 30, 10, 10 ,10);
+        Biome biome = new StandardBiome(30, 30, 50, 10 ,10);
 
         UUID speciesUUID = UUID.randomUUID();
 
