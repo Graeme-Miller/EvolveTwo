@@ -23,11 +23,11 @@ Animal:
         - solitary/group
         - likelihood of biome transfer
 - Actions:
-    - Eat food/eat other animal
+    - Eat food/eat other inhabitant
     - Mate
     - Sleep
     - Move Random
 
 Breeding:
-- each animal has a species ID and can only breed within there
+- each inhabitant has a species ID and can only breed within there
 

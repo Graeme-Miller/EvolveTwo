@@ -1,17 +1,14 @@
 package com.mayorgraeme.biome;
 
-import static com.mayorgraeme.util.RandomUtil.getRandomFromList;
 import static com.mayorgraeme.util.RandomUtil.shouldPeformAction;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Spliterator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -77,11 +74,11 @@ public class StandardBiome implements Biome {
             List<Coordinate> coordinateList = new ArrayList<>();
 
             Stream<InhabitantCoordinates> inhabitantCoordinatesStream = getInhabitantCoordinatesStream(new Coordinate(0, 0), maximumX * maximumY);
-            Optional<InhabitantCoordinates> inhabitantOptional = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getAnimal() == null).findFirst();
+            Optional<InhabitantCoordinates> inhabitantOptional = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null).findFirst();
 
             if (inhabitantOptional.isPresent()) {
                 Vegetation vegetationNew = new Vegetation(0, vegetationNutrition);
-                grid[inhabitantOptional.get().getX()][inhabitantOptional.get().getY()].setAnimal(vegetationNew);
+                grid[inhabitantOptional.get().getX()][inhabitantOptional.get().getY()].setInhabitant(vegetationNew);
                 vegetationCoordinate.put(vegetationNew, new Coordinate(inhabitantOptional.get().getX(), inhabitantOptional.get().getY()));
             }
         }
@@ -128,7 +125,7 @@ public class StandardBiome implements Biome {
 
 
         animalCoordinate.put(animal,coordinate);
-        grid[coordinate.getX()][coordinate.getY()].setAnimal(animal);
+        grid[coordinate.getX()][coordinate.getY()].setInhabitant(animal);
     }
 
     @Override
@@ -152,7 +149,7 @@ public class StandardBiome implements Biome {
 
     private void checkIfSpaceOccupiedAndThrowException(Coordinate coordinate){
         InhabitantCoordinates inhabitantCoordinates = grid[coordinate.getX()][coordinate.getY()];
-        if(inhabitantCoordinates.getAnimal() != null)
+        if(inhabitantCoordinates.getInhabitant() != null)
             throw new IllegalArgumentException("Tried to add animal to occupied space. Coordinate "+ coordinate+" occupying inhabitant "+inhabitantCoordinates);
     }
 

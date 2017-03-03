@@ -1,14 +1,13 @@
 package com.mayorgraeme.animal.action;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.animal.BasicAnimal;
+import com.mayorgraeme.animal.InhabitantCoordinates;
 import com.mayorgraeme.animal.Sex;
-import com.mayorgraeme.util.Coordinate;
-import com.mayorgraeme.util.RandomUtil;
 import com.mayorgraeme.biome.Biome;
+import com.mayorgraeme.util.RandomUtil;
 
 /**
  * Created by graememiller on 25/02/2017.
@@ -38,79 +37,71 @@ public class MateAction implements Action {
         //It's birthin' time
         animal.setPregnant(false);
 
-        List<Coordinate> coordinateList = new ArrayList<>();
-        biome.loopOverEmpty(animal, animal.getMoveSpeed(), coordinate -> {
-            coordinateList.add(coordinate);
-            return false;
-        } );
-
-
-        for (int i = 0; i < animal.getLitterSize(); i++) {
-
-            //No space, wasted pregnancy
-            if(coordinateList.isEmpty()) {
-                return true;
-            }
+        biome.getInhabitantCoordinatesStream(animal, animal.getMoveSpeed())
+                .filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null)
+                .limit(animal.getLitterSize()).forEach(inhabitantCoordinates -> {
 
             Sex sex;
-            if(RandomUtil.shouldPeformAction(50)){
+            if (RandomUtil.shouldPeformAction(50)) {
                 sex = Sex.MALE;
             } else {
                 sex = Sex.FEMALE;
             }
 
-            Animal baby = new BasicAnimal(  sex,
-                                            animal.getDiet(),
-                                            animal.getActions(),
-                                            animal.getMoveSpeed(),
-                                            animal.getSpeciesId(),
-                                            false,
-                                            0 ,
-                                            animal.getMaturityAge(),
-                                            animal.getGestationSpeed(),
-                                            animal.getLitterSize(),
-                                            animal.getMaxAge(),
-                                            0);
+            Animal baby = new BasicAnimal(sex,
+                    animal.getDiet(),
+                    animal.getActions(),
+                    animal.getMoveSpeed(),
+                    animal.getSpeciesId(),
+                    false,
+                    0,
+                    animal.getMaturityAge(),
+                    animal.getGestationSpeed(),
+                    animal.getLitterSize(),
+                    animal.getMaxAge(),
+                    0);
 
-            Coordinate coordinate = coordinateList.remove(0);
-            biome.addAnimal(baby, coordinate);
-
-        }
+            biome.addAnimal(baby, inhabitantCoordinates.getCoordinate());
+        });
 
         return true;
     }
 
     public boolean performMatingAction(Animal animal, Biome biome){
 
-        biome.loopOverInhabitant(animal, animal.getMoveSpeed(), inhabitant -> {
 
+        Optional<InhabitantCoordinates> inhabitantCoordinatesOptional = biome.getInhabitantCoordinatesStream(animal, animal.getMoveSpeed())
+                .filter(inhabitantCoordinates -> {
+
+                    if (inhabitantCoordinates.getInhabitant() == null)
+                        return false;
+                    if (inhabitantCoordinates.getInhabitant().getClass() != Animal.class)
+                        return false;
+
+                    Animal filterAnimal = (Animal) inhabitantCoordinates.getInhabitant();
+                    return  !animal.isPregnant() &&
+                            !filterAnimal.isPregnant() &&
+                            filterAnimal.getAge() > filterAnimal.getMaturityAge() &&
+                            filterAnimal.getSex() != animal.getSex() &&
+                            filterAnimal.getSpeciesId().equals(animal.getSpeciesId());
+                }).findFirst();
+
+
+
+        if(!inhabitantCoordinatesOptional.isPresent()){
             return false;
         }
 
-            if(!(inhabitant instanceof  Animal))
-                return false;
+        Animal mate = (Animal)inhabitantCoordinatesOptional.get().getInhabitant();
+        if(mate.getSex() == Sex.FEMALE){
+            mate.setPregnant(true);
+            mate.setPregnancyCountdown(mate.getGestationSpeed());
+        } else {
+            animal.setPregnant(true);
+            animal.setPregnancyCountdown(animal.getGestationSpeed());
+        }
 
-            Animal potentialMate = (Animal) inhabitant;
-            if(     !animal.isPregnant() &&
-                    !potentialMate.isPregnant() &&
-                    potentialMate.getAge() > potentialMate.getMaturityAge() &&
-                    potentialMate.getSex() != animal.getSex()) {
-
-                if(potentialMate.getSex() == Sex.FEMALE){
-                    potentialMate.setPregnant(true);
-                    potentialMate.setPregnancyCountdown(potentialMate.getGestationSpeed());
-                } else {
-                    animal.setPregnant(true);
-                    animal.setPregnancyCountdown(potentialMate.getGestationSpeed());
-                }
-
-                return true;
-            }
-
-            return  false;
-
-
-        return true;  //TODO: returning false here means that if you can breed, you must, and wont get any other actions
+        return true;
     }
 
 }
