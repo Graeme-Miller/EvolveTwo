@@ -2,11 +2,14 @@ package com.mayorgraeme.biome;
 
 import static com.mayorgraeme.util.RandomUtil.shouldPeformAction;
 
+import java.security.cert.CollectionCertStoreParameters;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -14,6 +17,7 @@ import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.animal.InhabitantCoordinates;
 import com.mayorgraeme.util.Coordinate;
 import com.mayorgraeme.util.MatrixSubSpliterator;
+import com.mayorgraeme.util.RandomUtil;
 
 /**
  * Created by graememiller on 19/02/2017.
@@ -69,14 +73,19 @@ public class StandardBiome implements Biome {
 
         //Vegetation process new
         if(shouldPeformAction(vegetationSpawnRate)) {
-            Stream<InhabitantCoordinates> inhabitantCoordinatesStream = getInhabitantCoordinatesStream(new Coordinate(0, 0), maximumX * maximumY);
-            Optional<InhabitantCoordinates> inhabitantOptional = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null).findFirst();
 
-            if (inhabitantOptional.isPresent()) {
+
+            Stream<InhabitantCoordinates> inhabitantCoordinatesStream = getInhabitantCoordinatesStream(new Coordinate(0, 0), maximumX * maximumY);
+
+            if(inhabitantCoordinatesStream.count() > 0) {
+                List<InhabitantCoordinates> inhabitantCoordinatesList = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null).collect(Collectors.toList());
+                InhabitantCoordinates randomFromList = RandomUtil.getRandomFromList(inhabitantCoordinatesList);
                 Vegetation vegetationNew = new Vegetation(0, vegetationNutrition);
-                grid[inhabitantOptional.get().getX()][inhabitantOptional.get().getY()].setInhabitant(vegetationNew);
-                vegetationCoordinate.put(vegetationNew, new Coordinate(inhabitantOptional.get().getX(), inhabitantOptional.get().getY()));
+                grid[randomFromList.getX()][randomFromList.getY()].setInhabitant(vegetationNew);
+                vegetationCoordinate.put(vegetationNew, randomFromList.getCoordinate());
             }
+
+
         }
 
 
