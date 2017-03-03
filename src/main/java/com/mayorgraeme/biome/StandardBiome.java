@@ -2,11 +2,9 @@ package com.mayorgraeme.biome;
 
 import static com.mayorgraeme.util.RandomUtil.shouldPeformAction;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -63,7 +61,7 @@ public class StandardBiome implements Biome {
             if(vegetation.getAge() > vegetationMaxAge) {
                 Coordinate coordinate = vegetationCoordinate.get(vegetation);
                 vegetationIterator.remove();
-                grid[coordinate.getX()][coordinate.getY()] = null;
+                grid[coordinate.getX()][coordinate.getY()].setInhabitant(null);
             }
 
             vegetation.setAge(vegetation.getAge()+1);
@@ -71,8 +69,6 @@ public class StandardBiome implements Biome {
 
         //Vegetation process new
         if(shouldPeformAction(vegetationSpawnRate)) {
-            List<Coordinate> coordinateList = new ArrayList<>();
-
             Stream<InhabitantCoordinates> inhabitantCoordinatesStream = getInhabitantCoordinatesStream(new Coordinate(0, 0), maximumX * maximumY);
             Optional<InhabitantCoordinates> inhabitantOptional = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null).findFirst();
 
@@ -90,9 +86,7 @@ public class StandardBiome implements Biome {
             if(!animalCoordinate.keySet().contains(animal))
                 continue;
 
-            animal.getActions().stream().filter(action -> {
-                return action.perform(animal, this);
-            }).findFirst();
+            animal.getActions().stream().filter(action -> action.perform(animal, this)).findFirst();
         }
     }
 
@@ -115,7 +109,7 @@ public class StandardBiome implements Biome {
             throw new IllegalArgumentException("Tried to remove animal, but did not have coordinates. Animal "+animal);
 
         animalCoordinate.remove(animal);
-        grid[coordinate.getX()][coordinate.getY()] = null;
+        grid[coordinate.getX()][coordinate.getY()].setInhabitant(null);
 
     }
 
@@ -138,9 +132,9 @@ public class StandardBiome implements Biome {
     @Override
     public Stream<InhabitantCoordinates> getInhabitantCoordinatesStream(Coordinate coordinate, int size) {
         int minX = Math.max(0, coordinate.getX()-size);
-        int maxX = Math.min(maximumX, coordinate.getX()+size);
+        int maxX = Math.min(maximumX-1, coordinate.getX()+size);
         int minY = Math.max(0, coordinate.getY()-size);
-        int maxY = Math.min(maximumY, coordinate.getY()+size);
+        int maxY = Math.min(maximumY-1, coordinate.getY()+size);
 
         MatrixSubSpliterator<InhabitantCoordinates> spliterator = new MatrixSubSpliterator<>(grid, minX, maxX, minY, maxY);
 

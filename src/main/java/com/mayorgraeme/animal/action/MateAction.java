@@ -75,7 +75,7 @@ public class MateAction implements Action {
 
                     if (inhabitantCoordinates.getInhabitant() == null)
                         return false;
-                    if (inhabitantCoordinates.getInhabitant().getClass() != Animal.class)
+                    if (!(inhabitantCoordinates.getInhabitant() instanceof Animal))
                         return false;
 
                     Animal filterAnimal = (Animal) inhabitantCoordinates.getInhabitant();

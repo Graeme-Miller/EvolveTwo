@@ -1,6 +1,7 @@
 package com.mayorgraeme.display;
 
 import com.mayorgraeme.animal.Animal;
+import com.mayorgraeme.animal.InhabitantCoordinates;
 import com.mayorgraeme.biome.Inhabitant;
 
 import com.google.common.base.Strings;
@@ -11,17 +12,17 @@ import com.google.common.base.Strings;
 public class TextDisplay implements Display {
 
     @Override
-    public void display(Inhabitant[][] inhabitantArray) {
+    public void display(InhabitantCoordinates[][] inhabitantArray) {
         int length = inhabitantArray.length;
 
         System.out.println(Strings.repeat("-", length*3));
 
-        for (Inhabitant[] inhabitants : inhabitantArray) {
-            for (Inhabitant inhabitant : inhabitants) {
-                if(inhabitant == null) {
+        for (InhabitantCoordinates[] inhabitants : inhabitantArray) {
+            for (InhabitantCoordinates inhabitant : inhabitants) {
+                if(inhabitant.getInhabitant() == null) {
                     System.out.print("  |");
                 } else {
-                    System.out.print(inhabitant.getIdentifier() + "|");
+                    System.out.print(inhabitant.getInhabitant().getIdentifier() + "|");
                 }
 
             }

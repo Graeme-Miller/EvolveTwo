@@ -4,8 +4,12 @@ import static com.mayorgraeme.util.RandomUtil.getRandomFromList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.mayorgraeme.animal.Animal;
+import com.mayorgraeme.animal.InhabitantCoordinates;
 import com.mayorgraeme.util.Coordinate;
 import com.mayorgraeme.biome.Biome;
 
@@ -19,17 +23,14 @@ public class RandomMove implements Action {
 
     @Override
     public boolean perform(Animal animal, Biome biome) {
-        List<Coordinate> coordinateList = new ArrayList<>();
-        biome.loopOverEmpty(animal, animal.getMoveSpeed(), coordinate -> {
-            coordinateList.add(coordinate);
-            return false;
-        } );
+        Stream<InhabitantCoordinates> inhabitantCoordinatesStream = biome.getInhabitantCoordinatesStream(animal, animal.getMoveSpeed());
+        List<InhabitantCoordinates> coordinateList  = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null).collect(Collectors.toList());
 
         if(coordinateList.isEmpty())
             return false;
 
-        Coordinate randomFromList = getRandomFromList(coordinateList);
-        biome.moveAnimal(animal, randomFromList);
+        InhabitantCoordinates randomFromList = getRandomFromList(coordinateList);
+        biome.moveAnimal(animal, randomFromList.getCoordinate());
 
         return true;
 
