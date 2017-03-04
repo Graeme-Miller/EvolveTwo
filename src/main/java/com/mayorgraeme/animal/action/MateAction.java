@@ -59,7 +59,10 @@ public class MateAction implements Action {
                     animal.getGestationSpeed(),
                     animal.getLitterSize(),
                     animal.getMaxAge(),
-                    0);
+                    0,
+                    100,
+                    animal.getMetabolism(),
+                    animal.getHungerLimitToEat());
 
             biome.addAnimal(baby, inhabitantCoordinates.getCoordinate());
         });

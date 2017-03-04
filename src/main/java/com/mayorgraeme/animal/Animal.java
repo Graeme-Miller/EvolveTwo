@@ -42,4 +42,12 @@ public interface Animal extends Inhabitant {
     int getPregnancyCountdown();
 
     void setPregnancyCountdown(int pregnancyCountdown);
+
+    int getHunger();
+
+    void setHunger(int hunger);
+
+    int getMetabolism();
+
+    int getHungerLimitToEat();
 }

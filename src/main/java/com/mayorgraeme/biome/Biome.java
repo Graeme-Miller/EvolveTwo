@@ -15,6 +15,8 @@ public interface Biome {
     void moveAnimal(Animal animal, Coordinate to);
     void removeAnimal(Animal animal);
     void addAnimal(Animal animal, Coordinate coordinate);
+    void removeVegetation(Vegetation vegetation);
+    void addVegetation(Vegetation vegetation, Coordinate coordinate);
     Stream<InhabitantCoordinates> getInhabitantCoordinatesStream(Coordinate coordinate, int size);
     Stream<InhabitantCoordinates> getInhabitantCoordinatesStream(Animal animal, int size);
 }

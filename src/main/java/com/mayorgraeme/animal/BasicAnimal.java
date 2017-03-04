@@ -13,18 +13,42 @@ public class BasicAnimal implements Animal {
     private Sex sex;
     private Diet diet;
     private List<Action> actions;
-    private int moveSpeed;
+
     private UUID id;
     private UUID speciesId;
+
+    private int moveSpeed;
+
     private boolean isPregnant;
     private int pregnancyCountdown;
     private int maturityAge;
+
     private int gestationSpeed;
     private int litterSize;
+
     private int maxAge;
     private int age;
 
-    public BasicAnimal(Sex sex, Diet diet, List<Action> actions, int moveSpeed, UUID speciesId, boolean isPregnant, int pregnancyCountdown, int maturityAge, int gestationSpeed, int litterSize, int maxAge, int age) {
+    private int hunger;
+    private int metabolism;
+    private int hungerLimitToEat;
+
+
+    public BasicAnimal(Sex sex,
+                       Diet diet,
+                       List<Action> actions,
+                       int moveSpeed,
+                       UUID speciesId,
+                       boolean isPregnant,
+                       int pregnancyCountdown,
+                       int maturityAge,
+                       int gestationSpeed,
+                       int litterSize,
+                       int maxAge,
+                       int age,
+                       int hunger,
+                       int metabolism,
+                       int hungerLimitToEat) {
         this.sex = sex;
         this.diet = diet;
         this.actions = actions;
@@ -38,6 +62,9 @@ public class BasicAnimal implements Animal {
         this.litterSize = litterSize;
         this.maxAge = maxAge;
         this.age = age;
+        this.hunger = hunger;
+        this.metabolism = metabolism;
+        this.hungerLimitToEat = hungerLimitToEat;
     }
 
     @Override
@@ -120,7 +147,25 @@ public class BasicAnimal implements Animal {
         this.age = age;
     }
 
+    @Override
+    public int getHunger() {
+        return hunger;
+    }
 
+    @Override
+    public void setHunger(int hunger) {
+        this.hunger = hunger;
+    }
+
+    @Override
+    public int getMetabolism() {
+        return metabolism;
+    }
+
+    @Override
+    public int getHungerLimitToEat() {
+        return hungerLimitToEat;
+    }
 
     @Override
     public boolean equals(Object o) {

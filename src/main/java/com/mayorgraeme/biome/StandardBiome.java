@@ -2,13 +2,11 @@ package com.mayorgraeme.biome;
 
 import static com.mayorgraeme.util.RandomUtil.shouldPeformAction;
 
-import java.security.cert.CollectionCertStoreParameters;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -71,6 +69,7 @@ public class StandardBiome implements Biome {
             vegetation.setAge(vegetation.getAge()+1);
         }
 
+        //TODO: the below means we always create vegetation even if there is none left- maybe they should be treated like animals?
         //Vegetation process new
         if(shouldPeformAction(vegetationSpawnRate)) {
 
@@ -81,13 +80,9 @@ public class StandardBiome implements Biome {
             if(!inhabitantCoordinatesList.isEmpty()) {
                 InhabitantCoordinates randomFromList = RandomUtil.getRandomFromList(inhabitantCoordinatesList);
                 Vegetation vegetationNew = new Vegetation(0, vegetationNutrition);
-                grid[randomFromList.getX()][randomFromList.getY()].setInhabitant(vegetationNew);
-                vegetationCoordinate.put(vegetationNew, randomFromList.getCoordinate());
+                addVegetation(vegetationNew, randomFromList.getCoordinate());
             }
-
-
         }
-
 
         //Animal Process
         HashSet<Animal> animalsCopy = new HashSet<>(animalCoordinate.keySet());
@@ -129,6 +124,24 @@ public class StandardBiome implements Biome {
 
         animalCoordinate.put(animal,coordinate);
         grid[coordinate.getX()][coordinate.getY()].setInhabitant(animal);
+    }
+
+    @Override
+    public void removeVegetation(Vegetation vegetation) {
+        Coordinate coordinate = vegetationCoordinate.get(vegetation);
+        if(coordinate == null)
+            throw new IllegalArgumentException("Tried to remove vegetation, but did not have coordinates. Animal "+vegetation);
+
+        vegetationCoordinate.remove(vegetation);
+        grid[coordinate.getX()][coordinate.getY()].setInhabitant(null);
+    }
+
+    @Override
+    public void addVegetation(Vegetation vegetation, Coordinate coordinate) {
+        checkIfSpaceOccupiedAndThrowException(coordinate);
+        vegetationCoordinate.put(vegetation,coordinate);
+
+        grid[coordinate.getX()][coordinate.getY()].setInhabitant(vegetation);
     }
 
     @Override
