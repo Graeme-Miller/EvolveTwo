@@ -154,7 +154,7 @@ public class BasicAnimal implements Animal {
 
     @Override
     public void setHunger(int hunger) {
-        this.hunger = hunger;
+        this.hunger = Math.min(hunger, 100); //never more full than 100%
     }
 
     @Override
@@ -182,8 +182,13 @@ public class BasicAnimal implements Animal {
         return id.hashCode();
     }
 
+//    @Override
+//    public String getIdentifier() {
+//        return getSpeciesId().toString().substring(0, 2);
+//    }
+
     @Override
     public String getIdentifier() {
-        return getSpeciesId().toString().substring(0, 2);
+        return getDiet().toString().substring(0, 2);
     }
 }

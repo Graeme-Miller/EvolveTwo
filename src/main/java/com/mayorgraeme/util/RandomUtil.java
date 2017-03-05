@@ -12,6 +12,9 @@ public class RandomUtil {
 
 
     public static <G> G getRandomFromList(List<G> list) {
+        if(list.isEmpty()){
+            return null;
+        }
 
         Random rnd = new Random();
         int i = rnd.nextInt(list.size());

@@ -41,15 +41,18 @@ public class App {
 
 
 
-        for (int x = 0; x < 5; x++) {
-            BasicAnimal basicAnimal = new BasicAnimal(Sex.FEMALE, Diet.HERBIVORE, actions, 3, speciesUUID, false, 0, 5, 18, 2, 50, 0, 100, 3 ,40);
-            biome.addAnimal(basicAnimal, new Coordinate(x, 0));
+        for (int x = 0; x < 20; x++) {
+            Sex sex = Sex.MALE;
+            if(x%2 == 0)
+                sex = Sex.FEMALE;
+
+            BasicAnimal herbivoreANimal = new BasicAnimal(sex, Diet.HERBIVORE, actions, 3, speciesUUID, false, 0, 5, 18, 2, 50, 0, 100, 3 ,40);
+            biome.addAnimal(herbivoreANimal, new Coordinate(x, 0));
+
+            BasicAnimal carnivoreAninal = new BasicAnimal(sex, Diet.CARNIVORE, actions, 3, speciesUUID, false, 0, 5, 20, 1, 50, 0, 100, 3 ,20);
+            biome.addAnimal(carnivoreAninal, new Coordinate(x, 1));
         }
 
-        for (int x = 5; x < 10; x++) {
-            BasicAnimal basicAnimal = new BasicAnimal(Sex.MALE, Diet.HERBIVORE, actions, 3, speciesUUID, false, 0, 5, 18, 2, 50, 0, 100, 3 ,40);
-            biome.addAnimal(basicAnimal, new Coordinate(x, 0));
-        }
 
         while(true) {
             try {

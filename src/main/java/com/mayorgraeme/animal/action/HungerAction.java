@@ -1,11 +1,14 @@
 package com.mayorgraeme.animal.action;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.animal.InhabitantCoordinates;
 import com.mayorgraeme.biome.Biome;
 import com.mayorgraeme.biome.Vegetation;
+import com.mayorgraeme.util.RandomUtil;
 
 /**
  * Created by graememiller on 04/03/2017.
@@ -55,8 +58,27 @@ public class HungerAction implements Action {
     }
 
     public boolean carnivore(Animal animal, Biome biome) {
-        //TODO: Carnivore
+        List<InhabitantCoordinates> dinnerOptions =
+                biome.getInhabitantCoordinatesStream(animal, animal.getMoveSpeed()).filter(inhabitantCoordinate -> {
+                    if (inhabitantCoordinate.getInhabitant() == null
+                            || !(inhabitantCoordinate.getInhabitant() instanceof Animal ))
+                        return false;
+            Animal animalInhabitant = (Animal)inhabitantCoordinate.getInhabitant();
+            return animal.getSpeciesId() != animalInhabitant.getSpeciesId();
 
-        return false;
+                }
+        ).collect(Collectors.toList());
+
+        if(dinnerOptions.isEmpty())
+            return false;
+        //TODO taking random from list, should consider:
+        // weakest from list
+        // a limit for how much defense they have
+        // a function to try and balance cost to benefit using properties of animal
+        Animal randomFromList = (Animal)RandomUtil.getRandomFromList(dinnerOptions);
+        biome.removeAnimal(randomFromList);
+
+        animal.setHunger(animal.getHunger() + 100); //TODO should the amount of hunger gained be a function of how big the eaten animal is
+        return true;
     }
 }
