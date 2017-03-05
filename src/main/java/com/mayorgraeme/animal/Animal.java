@@ -7,47 +7,252 @@ import com.mayorgraeme.animal.action.Action;
 import com.mayorgraeme.biome.Inhabitant;
 
 /**
- * Created by graememiller on 19/02/2017.
+ * Created by graememiller on 21/02/2017.
  */
-public interface Animal extends Inhabitant {
+public class Animal implements Inhabitant {
 
-    List<Action> getActions();
+    private Sex sex;
+    private Diet diet;
+    private List<Action> actions;
 
-    int getMoveSpeed();
+    private UUID id;
+    private UUID speciesId;
 
-    UUID getId();
+    private int moveSpeedPercentage;
+    private int moveSpeed;
 
-    UUID getSpeciesId();
+    private boolean isPregnant;
+    private int pregnancyCountdown;
+    private int maturityAgePercentage;
+    private int maturityAge;
 
-    boolean isPregnant();
+    private int gestationSpeedPercentage;
+    private int litterSizePercentage;
+    private int gestationSpeed;
+    private int litterSize;
 
-    void setPregnant(boolean isPregnant);
+    private int maxAgePercentage;
+    private int maxAge;
+    private int age;
 
-    int getMaturityAge();
+    private int hunger;
+    private int metabolismPercentage;
+    private int metabolism;
+    private int hungerLimitToEatPercentage;
+    private int hungerLimitToEat;
 
-    int getGestationSpeed();
 
-    int getLitterSize();
 
-    int getMaxAge();
+    public Animal(Sex sex,
+                       Diet diet,
+                       List<Action> actions,
+                       int moveSpeedPercentage,
+                       UUID speciesId,
+                       boolean isPregnant,
+                       int pregnancyCountdown,
+                       int maturityAgePercentage,
+                       int gestationSpeedPercentage,
+                       int litterSizePercentage,
+                       int maxAgePercentage,
+                       int age,
+                       int hunger,
+                       int metabolismPercentage,
+                       int hungerLimitToEatPercentage) {
+        this.sex = sex;
+        this.diet = diet;
+        this.actions = actions;
+        this.moveSpeedPercentage = moveSpeedPercentage;
+        this.id = UUID.randomUUID();
+        this.speciesId = speciesId;
+        this.isPregnant = isPregnant;
+        this.pregnancyCountdown = pregnancyCountdown;
+        this.maturityAgePercentage = maturityAgePercentage;
+        this.gestationSpeedPercentage = gestationSpeedPercentage;
+        this.litterSizePercentage = litterSizePercentage;
+        this.maxAgePercentage = maxAgePercentage;
+        this.age = age;
+        this.hunger = hunger;
+        this.metabolismPercentage = metabolismPercentage;
+        this.hungerLimitToEatPercentage = hungerLimitToEatPercentage;
 
-    int getAge();
+        
+         moveSpeed = PercentageToValue.moveSpeedConversion(moveSpeedPercentage);
+         maturityAge = PercentageToValue.maturityAgeConversion(maturityAgePercentage);
+         gestationSpeed = PercentageToValue.gestationSpeedConversion(gestationSpeedPercentage);
+         litterSize = PercentageToValue.litterSizeConversion(litterSizePercentage);
+         maxAge = PercentageToValue.maxAgeConversion(maxAgePercentage);
+         metabolism = PercentageToValue.metabolismConversion(metabolismPercentage);
+         hungerLimitToEat = PercentageToValue.hungerLimitToEatConversion(hungerLimitToEatPercentage);
 
-    void setAge(int age);
+    }
 
-    Sex getSex();
+    
+    public Sex getSex() {
+        return sex;
+    }
+    
+    public Diet getDiet() {
+        return diet;
+    }
+    
+    public int getPregnancyCountdown() {
+        return pregnancyCountdown;
+    }
+    
+    public void setPregnancyCountdown(int pregnancyCountdown) {
+        this.pregnancyCountdown = pregnancyCountdown;
+    }
+    
+    public List<Action> getActions() {
+        return actions;
+    }
 
-    Diet getDiet();
+    public int getMoveSpeedPercentage() {
+        return moveSpeedPercentage;
+    }
 
-    int getPregnancyCountdown();
+    
+    public UUID getId() {
+        return id;
+    }
 
-    void setPregnancyCountdown(int pregnancyCountdown);
+    
+    public UUID getSpeciesId() {
+        return speciesId;
+    }
 
-    int getHunger();
+    
+    public boolean isPregnant() {
+        return isPregnant;
+    }
 
-    void setHunger(int hunger);
+    
+    public void setPregnant(boolean isPregnant) {
+        this.isPregnant = isPregnant;
+    }
 
-    int getMetabolism();
+    public int getMaturityAgePercentage() {
+        return maturityAgePercentage;
+    }
 
-    int getHungerLimitToEat();
+    public int getGestationSpeedPercentage() {
+        return gestationSpeedPercentage;
+    }
+
+    public int getLitterSizePercentage() {
+        return litterSizePercentage;
+    }
+
+    public int getMaxAgePercentage() {
+        return maxAgePercentage;
+    }
+
+    
+    public int getAge() {
+        return age;
+    }
+
+    
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    
+    public int getHunger() {
+        return hunger;
+    }
+
+    
+    public void setHunger(int hunger) {
+        this.hunger = Math.min(hunger, 100); //never more full than 100%
+    }
+
+    public int getMetabolismPercentage() {
+        return metabolismPercentage;
+    }
+
+    public int getHungerLimitToEatPercentage() {
+        return hungerLimitToEatPercentage;
+    }
+
+    public int getMoveSpeed() {
+        return moveSpeed;
+    }
+
+    public int getMaturityAge() {
+        return maturityAge;
+    }
+
+    public int getGestationSpeed() {
+        return gestationSpeed;
+    }
+
+    public int getLitterSize() {
+        return litterSize;
+    }
+
+    public int getMaxAge() {
+        return maxAge;
+    }
+
+    public int getMetabolism() {
+        return metabolism;
+    }
+
+    public int getHungerLimitToEat() {
+        return hungerLimitToEat;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Animal that = (Animal) o;
+
+        return id.equals(that.id);
+    }
+
+    
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+//    
+//    public String getIdentifier() {
+//        return getSpeciesId().toString().substring(0, 2);
+//    }
+
+    
+    public String getIdentifier() {
+        return getDiet().toString().substring(0, 2);
+    }
+
+    @Override
+    public String toString() {
+        return "Animal{" +
+                "sex=" + sex +
+                ", diet=" + diet +
+                ", actions=" + actions +
+                ", id=" + id +
+                ", speciesId=" + speciesId +
+                ", moveSpeedPercentage=" + moveSpeedPercentage +
+                ", moveSpeed=" + moveSpeed +
+                ", isPregnant=" + isPregnant +
+                ", pregnancyCountdown=" + pregnancyCountdown +
+                ", maturityAgePercentage=" + maturityAgePercentage +
+                ", maturityAge=" + maturityAge +
+                ", gestationSpeedPercentage=" + gestationSpeedPercentage +
+                ", litterSizePercentage=" + litterSizePercentage +
+                ", gestationSpeed=" + gestationSpeed +
+                ", litterSize=" + litterSize +
+                ", maxAgePercentage=" + maxAgePercentage +
+                ", maxAge=" + maxAge +
+                ", age=" + age +
+                ", hunger=" + hunger +
+                ", metabolismPercentage=" + metabolismPercentage +
+                ", metabolism=" + metabolism +
+                ", hungerLimitToEatPercentage=" + hungerLimitToEatPercentage +
+                ", hungerLimitToEat=" + hungerLimitToEat +
+                '}';
+    }
 }

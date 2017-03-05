@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.mayorgraeme.animal.BasicAnimal;
+import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.animal.Diet;
 import com.mayorgraeme.animal.Sex;
 import com.mayorgraeme.animal.action.Action;
@@ -46,10 +46,10 @@ public class App {
             if(x%2 == 0)
                 sex = Sex.FEMALE;
 
-            BasicAnimal herbivoreANimal = new BasicAnimal(sex, Diet.HERBIVORE, actions, 3, speciesUUID, false, 0, 5, 18, 2, 50, 0, 100, 3 ,40);
+            Animal herbivoreANimal = new Animal(sex, Diet.HERBIVORE, actions, 100, speciesUUID, false, 0, 50, 50, 50, 60, 0, 100, 50 ,50);
             biome.addAnimal(herbivoreANimal, new Coordinate(x, 0));
 
-            BasicAnimal carnivoreAninal = new BasicAnimal(sex, Diet.CARNIVORE, actions, 3, speciesUUID, false, 0, 5, 20, 1, 50, 0, 100, 3 ,20);
+            Animal carnivoreAninal = new Animal(sex, Diet.CARNIVORE, actions, 100, speciesUUID, false, 0, 50, 50, 10, 100, 0, 100, 50 ,15);
             biome.addAnimal(carnivoreAninal, new Coordinate(x, 1));
         }
 

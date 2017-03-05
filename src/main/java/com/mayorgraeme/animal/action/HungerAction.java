@@ -21,6 +21,7 @@ public class HungerAction implements Action {
         int newHunger = animal.getHunger() - animal.getMetabolism();
         if(newHunger <= 0) {
             biome.removeAnimal(animal);
+            System.out.println("Animal "+animal+" died due to hunger");
             return true;
         }
         animal.setHunger(newHunger);
@@ -75,7 +76,7 @@ public class HungerAction implements Action {
         // weakest from list
         // a limit for how much defense they have
         // a function to try and balance cost to benefit using properties of animal
-        Animal randomFromList = (Animal)RandomUtil.getRandomFromList(dinnerOptions);
+        Animal randomFromList = (Animal)RandomUtil.getRandomFromList(dinnerOptions).getInhabitant();
         biome.removeAnimal(randomFromList);
 
         animal.setHunger(animal.getHunger() + 100); //TODO should the amount of hunger gained be a function of how big the eaten animal is

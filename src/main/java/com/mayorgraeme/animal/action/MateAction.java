@@ -3,7 +3,6 @@ package com.mayorgraeme.animal.action;
 import java.util.Optional;
 
 import com.mayorgraeme.animal.Animal;
-import com.mayorgraeme.animal.BasicAnimal;
 import com.mayorgraeme.animal.InhabitantCoordinates;
 import com.mayorgraeme.animal.Sex;
 import com.mayorgraeme.biome.Biome;
@@ -48,21 +47,21 @@ public class MateAction implements Action {
                 sex = Sex.FEMALE;
             }
 
-            Animal baby = new BasicAnimal(sex,
+            Animal baby = new Animal(sex,
                     animal.getDiet(),
                     animal.getActions(),
-                    animal.getMoveSpeed(),
+                    animal.getMoveSpeedPercentage(),
                     animal.getSpeciesId(),
                     false,
                     0,
-                    animal.getMaturityAge(),
-                    animal.getGestationSpeed(),
-                    animal.getLitterSize(),
-                    animal.getMaxAge(),
+                    animal.getMaturityAgePercentage(),
+                    animal.getGestationSpeedPercentage(),
+                    animal.getLitterSizePercentage(),
+                    animal.getMaxAgePercentage(),
                     0,
                     100,
-                    animal.getMetabolism(),
-                    animal.getHungerLimitToEat());
+                    animal.getMetabolismPercentage(),
+                    animal.getHungerLimitToEatPercentage());
 
             biome.addAnimal(baby, inhabitantCoordinates.getCoordinate());
         });

@@ -11,7 +11,7 @@ public class AgeAction implements  Action {
     public boolean perform(Animal animal, Biome biome) {
         if(animal.getAge() > animal.getMaxAge()) {
             biome.removeAnimal(animal);
-
+            System.out.println("Animal "+animal+" died due to old age");
             return true;
         } else {
             animal.setAge(animal.getAge() + 1);
