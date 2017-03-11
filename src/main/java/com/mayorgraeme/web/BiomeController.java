@@ -3,6 +3,7 @@ package com.mayorgraeme.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -79,17 +80,17 @@ public class BiomeController {
         actions.add(new MateAction());
         actions.add(new RandomMove());
 
-
+        Random random = new Random();
 
         for (int x = 0; x < 20; x++) {
             Sex sex = Sex.MALE;
             if(x%2 == 0)
                 sex = Sex.FEMALE;
 
-            Animal herbivoreANimal = new Animal(sex, Diet.HERBIVORE, actions, 100, speciesUUID, false, 0, 50, 50, 50, 60, 0, 100, 50 ,50);
-            biome.addAnimal(herbivoreANimal, new Coordinate(x, 0));
+            Animal herbivoreAnimal = new Animal(sex, Diet.HERBIVORE, actions, 100, speciesUUID, false, 0, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, 0, 100, random.nextInt(100)+1 ,random.nextInt(100)+1);
+            biome.addAnimal(herbivoreAnimal, new Coordinate(x, 0));
 
-            Animal carnivoreAninal = new Animal(sex, Diet.CARNIVORE, actions, 100, speciesUUID, false, 0, 50, 50, 10, 100, 0, 100, 50 ,15);
+            Animal carnivoreAninal = new Animal(sex, Diet.CARNIVORE, actions, 100, speciesUUID, false, 0, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, 0, 100, random.nextInt(100)+1 ,random.nextInt(100)+1);
             biome.addAnimal(carnivoreAninal, new Coordinate(x, 1));
         }
 
