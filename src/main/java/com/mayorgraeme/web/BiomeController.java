@@ -3,14 +3,12 @@ package com.mayorgraeme.web;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.*;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.mayorgraeme.animal.Animal;
@@ -24,13 +22,12 @@ import com.mayorgraeme.animal.action.MateAction;
 import com.mayorgraeme.animal.action.RandomMove;
 import com.mayorgraeme.biome.Biome;
 import com.mayorgraeme.biome.StandardBiome;
-import com.mayorgraeme.util.Coordinate;
 
 /**
  * Created by graememiller on 11/03/2017.
  */
 
-@Controller
+@RestController
 @EnableAutoConfiguration
 public class BiomeController {
 
@@ -71,29 +68,6 @@ public class BiomeController {
     @PostConstruct
     public void init() {
         biome  = new StandardBiome(xSize, ySize, vegetationSpawnRate, vegetationMaxAge ,vegetationNutrition);
-
-        UUID speciesUUID = UUID.randomUUID();
-
-        List<Action> actions = new ArrayList<>();
-        actions.add(new AgeAction());
-        actions.add(new HungerAction());
-        actions.add(new MateAction());
-        actions.add(new RandomMove());
-
-        Random random = new Random();
-
-        for (int x = 0; x < 20; x++) {
-            Sex sex = Sex.MALE;
-            if(x%2 == 0)
-                sex = Sex.FEMALE;
-
-            Animal herbivoreAnimal = new Animal(sex, Diet.HERBIVORE, actions, 100, speciesUUID, false, 0, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, 0, 100, random.nextInt(100)+1 ,random.nextInt(100)+1);
-            biome.addAnimal(herbivoreAnimal, new Coordinate(x, 0));
-
-            Animal carnivoreAnimal = new Animal(sex, Diet.CARNIVORE, actions, 100, speciesUUID, false, 0, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, 0, 100, random.nextInt(100)+1 ,random.nextInt(100)+1);
-            biome.addAnimal(carnivoreAnimal, new Coordinate(x, 1));
-        }
-
         (new UpdateThread()).start();
     }
 
@@ -113,5 +87,47 @@ public class BiomeController {
         return list;
     }
 
+
+    @RequestMapping(path = "/vegetationSpawnRate", method = RequestMethod.PUT)
+    public void setConfigurationVegetationSpawnRate(int vegetationSpawnRate){
+        this.vegetationSpawnRate = vegetationSpawnRate;
+        biome.setConfigurationVegetationSpawnRate(vegetationSpawnRate);
+    }
+
+    @RequestMapping(path = "/vegetationMaxAge", method = RequestMethod.PUT)
+    public void setConfigurationVegetationMaxAge(int vegetationMaxAge){
+        this.vegetationMaxAge = vegetationMaxAge;
+        biome.setConfigurationVegetationMaxAge(vegetationMaxAge);
+    }
+
+    @RequestMapping(path = "/vegetationNutrition", method = RequestMethod.PUT)
+    public void setConfigurationVegetationNutrition(int vegetationNutrition){
+        this.vegetationNutrition = vegetationNutrition;
+        this.setConfigurationVegetationNutrition(vegetationNutrition);
+    }
+
+    @RequestMapping(path = "/animal", method = RequestMethod.PUT)
+    public void animal(
+            Sex sex,
+            Diet diet,
+            int moveSpeedPercentage,
+            int maturityAgePercentage,
+            int gestationSpeedPercentage,
+            int litterSizePercentage,
+            int maxAgePercentage,
+            int metabolismPercentage,
+            int hungerLimitToEatPercentage) {
+
+        UUID speciesUUID = UUID.randomUUID();
+
+        List<Action> actions = new ArrayList<>();
+        actions.add(new AgeAction());
+        actions.add(new HungerAction());
+        actions.add(new MateAction());
+        actions.add(new RandomMove());
+
+        Animal animal = new Animal(sex, diet, actions, moveSpeedPercentage, speciesUUID, false, 0, maturityAgePercentage, gestationSpeedPercentage, litterSizePercentage, maxAgePercentage, 0, 100, metabolismPercentage, hungerLimitToEatPercentage);
+        biome.addAnimal(animal);
+    }
 
 }

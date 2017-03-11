@@ -72,13 +72,10 @@ public class StandardBiome implements Biome {
         //TODO: the below means we always create vegetation even if there is none left- maybe they should be treated like animals?
         //Vegetation process new
         for (int i = 0; i < vegetationSpawnRate; i++) {
-            Stream<InhabitantCoordinates> inhabitantCoordinatesStream = getInhabitantCoordinatesStream(new Coordinate(0, 0), maximumX * maximumY);
-            List<InhabitantCoordinates> inhabitantCoordinatesList = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null).collect(Collectors.toList());
-
-            if(!inhabitantCoordinatesList.isEmpty()) {
-                InhabitantCoordinates randomFromList = RandomUtil.getRandomFromList(inhabitantCoordinatesList);
+            InhabitantCoordinates emptySpace = getEmptySpace();
+            if(emptySpace != null) {
                 Vegetation vegetationNew = new Vegetation(0, vegetationNutrition);
-                addVegetation(vegetationNew, randomFromList.getCoordinate());
+                addVegetation(vegetationNew, emptySpace.getCoordinate());
             }
         }
 
@@ -125,6 +122,16 @@ public class StandardBiome implements Biome {
     }
 
     @Override
+    public void addAnimal(Animal animal) {
+        InhabitantCoordinates emptySpace = getEmptySpace();
+
+        if(emptySpace == null)
+            throw new IllegalStateException("Trying to add animal but there is no empty space");
+
+        addAnimal(animal, emptySpace.getCoordinate());
+    }
+
+    @Override
     public void removeVegetation(Vegetation vegetation) {
         Coordinate coordinate = vegetationCoordinate.get(vegetation);
         if(coordinate == null)
@@ -150,6 +157,21 @@ public class StandardBiome implements Biome {
     }
 
     @Override
+    public void setConfigurationVegetationSpawnRate(int vegetationSpawnRate) {
+        this.vegetationSpawnRate = vegetationSpawnRate;
+    }
+
+    @Override
+    public void setConfigurationVegetationMaxAge(int vegetationMaxAge) {
+        this.vegetationMaxAge = vegetationMaxAge;
+    }
+
+    @Override
+    public void setConfigurationVegetationNutrition(int vegetationNutrition) {
+        this.vegetationNutrition = vegetationNutrition;
+    }
+
+    @Override
     public Stream<InhabitantCoordinates> getInhabitantCoordinatesStream(Coordinate coordinate, int size) {
         int minX = Math.max(0, coordinate.getX()-size);
         int maxX = Math.min(maximumX-1, coordinate.getX()+size);
@@ -168,4 +190,14 @@ public class StandardBiome implements Biome {
     }
 
 
+    private InhabitantCoordinates getEmptySpace() {
+        Stream<InhabitantCoordinates> inhabitantCoordinatesStream = getInhabitantCoordinatesStream(new Coordinate(0, 0), maximumX * maximumY);
+        List<InhabitantCoordinates> inhabitantCoordinatesList = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null).collect(Collectors.toList());
+
+        if(!inhabitantCoordinatesList.isEmpty()) {
+            return RandomUtil.getRandomFromList(inhabitantCoordinatesList);
+        } else {
+            return null;
+        }
+    }
 }

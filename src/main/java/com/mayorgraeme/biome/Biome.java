@@ -2,6 +2,9 @@ package com.mayorgraeme.biome;
 
 import java.util.stream.Stream;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.animal.InhabitantCoordinates;
 import com.mayorgraeme.util.Coordinate;
@@ -15,8 +18,13 @@ public interface Biome {
     void moveAnimal(Animal animal, Coordinate to);
     void removeAnimal(Animal animal);
     void addAnimal(Animal animal, Coordinate coordinate);
+    void addAnimal(Animal animal);
     void removeVegetation(Vegetation vegetation);
     void addVegetation(Vegetation vegetation, Coordinate coordinate);
     Stream<InhabitantCoordinates> getInhabitantCoordinatesStream(Coordinate coordinate, int size);
     Stream<InhabitantCoordinates> getInhabitantCoordinatesStream(Animal animal, int size);
+
+    void setConfigurationVegetationSpawnRate(int vegetationSpawnRate);
+    void setConfigurationVegetationMaxAge(int vegetationMaxAge);
+    void setConfigurationVegetationNutrition(int vegetationNutrition);
 }

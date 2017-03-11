@@ -1,1 +1,27 @@
+#remove all evotwo
+docker ps -a | awk '{ print $1,$2 }' | grep evotwo | awk '{print $1 }' | xargs -I {} docker rm -f {}
+
+#Select animals
 curl -s localhost:8080 | jq 'map(select(.inhabitant != null))' | jq 'map(select(.inhabitant.identifier != "Ve"))' | jq '.[]|.inhabitant.age' | wc -l
+
+#Select vegetables
+curl -s localhost:8080 | jq 'map(select(.inhabitant != null))' | jq 'map(select(.inhabitant.identifier == "Ve"))' | jq '.[]|.inhabitant.age' | wc -l
+
+#select inhab by ident
+curl -s localhost:8080 | jq 'map(select(.inhabitant.id = "520ad9f3-91e2-46a3-82f3-2a297aa1b991"))'
+
+#change config
+curl -X PUT -d vegetationSpawnRate=100 localhost:8080/vegetationSpawnRate
+
+#add an animal
+curl -X PUT \
+-d sex=FEMALE \
+-d diet=HERBIVORE \
+-d moveSpeedPercentage=50 \
+-d maturityAgePercentage=50 \
+-d gestationSpeedPercentage=50 \
+-d litterSizePercentage=50 \
+-d maxAgePercentage=50 \
+-d metabolismPercentage=50 \
+-d hungerLimitToEatPercentage=50 \
+localhost:8080/animal
