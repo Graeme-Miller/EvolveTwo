@@ -3,6 +3,7 @@ package com.mayorgraeme.animal;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mayorgraeme.animal.action.Action;
 import com.mayorgraeme.biome.Inhabitant;
 
@@ -13,6 +14,8 @@ public class Animal implements Inhabitant {
 
     private Sex sex;
     private Diet diet;
+
+    @JsonIgnore
     private List<Action> actions;
 
     private UUID id;
