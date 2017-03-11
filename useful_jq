@@ -1,0 +1,1 @@
+curl -s localhost:8080 | jq 'map(select(.inhabitant != null))' | jq 'map(select(.inhabitant.identifier != "Ve"))' | jq '.[]|.inhabitant.age' | wc -l

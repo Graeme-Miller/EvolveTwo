@@ -71,9 +71,7 @@ public class StandardBiome implements Biome {
 
         //TODO: the below means we always create vegetation even if there is none left- maybe they should be treated like animals?
         //Vegetation process new
-        if(shouldPeformAction(vegetationSpawnRate)) {
-
-
+        for (int i = 0; i < vegetationSpawnRate; i++) {
             Stream<InhabitantCoordinates> inhabitantCoordinatesStream = getInhabitantCoordinatesStream(new Coordinate(0, 0), maximumX * maximumY);
             List<InhabitantCoordinates> inhabitantCoordinatesList = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null).collect(Collectors.toList());
 

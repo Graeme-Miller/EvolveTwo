@@ -90,8 +90,8 @@ public class BiomeController {
             Animal herbivoreAnimal = new Animal(sex, Diet.HERBIVORE, actions, 100, speciesUUID, false, 0, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, 0, 100, random.nextInt(100)+1 ,random.nextInt(100)+1);
             biome.addAnimal(herbivoreAnimal, new Coordinate(x, 0));
 
-            Animal carnivoreAninal = new Animal(sex, Diet.CARNIVORE, actions, 100, speciesUUID, false, 0, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, 0, 100, random.nextInt(100)+1 ,random.nextInt(100)+1);
-            biome.addAnimal(carnivoreAninal, new Coordinate(x, 1));
+            Animal carnivoreAnimal = new Animal(sex, Diet.CARNIVORE, actions, 100, speciesUUID, false, 0, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, random.nextInt(100)+1, 0, 100, random.nextInt(100)+1 ,random.nextInt(100)+1);
+            biome.addAnimal(carnivoreAnimal, new Coordinate(x, 1));
         }
 
         (new UpdateThread()).start();
@@ -100,8 +100,17 @@ public class BiomeController {
 
     @RequestMapping("/")
     @ResponseBody
-    public InhabitantCoordinates[][] home() {
-        return biome.getInhabitantMap();
+    public List<InhabitantCoordinates> home() {
+        InhabitantCoordinates[][] inhabitantMap = biome.getInhabitantMap();
+
+        ArrayList<InhabitantCoordinates> list = new ArrayList(xSize*ySize);
+        for (InhabitantCoordinates[] inhabitantCoordinates : inhabitantMap) {
+            for (InhabitantCoordinates inhabitantCoordinate : inhabitantCoordinates) {
+                list.add(inhabitantCoordinate);
+            }
+        }
+
+        return list;
     }
 
 
