@@ -58,8 +58,9 @@ public class BiomeController {
                     e.printStackTrace();
                 }
 
-
-                biome.process();
+                synchronized (biome) {
+                    biome.process();
+                }
             }
         }
 
@@ -127,7 +128,9 @@ public class BiomeController {
         actions.add(new RandomMove());
 
         Animal animal = new Animal(sex, diet, actions, moveSpeedPercentage, speciesUUID, false, 0, maturityAgePercentage, gestationSpeedPercentage, litterSizePercentage, maxAgePercentage, 0, 100, metabolismPercentage, hungerLimitToEatPercentage);
-        biome.addAnimal(animal);
+        synchronized(biome) {
+            biome.addAnimal(animal);
+        }
     }
 
 }
