@@ -111,6 +111,7 @@ public class BiomeController {
     public void animal(
             Sex sex,
             Diet diet,
+            String speciesId,
             int moveSpeedPercentage,
             int maturityAgePercentage,
             int gestationSpeedPercentage,
@@ -119,15 +120,13 @@ public class BiomeController {
             int metabolismPercentage,
             int hungerLimitToEatPercentage) {
 
-        UUID speciesUUID = UUID.randomUUID();
-
         List<Action> actions = new ArrayList<>();
         actions.add(new AgeAction());
         actions.add(new HungerAction());
         actions.add(new MateAction());
         actions.add(new RandomMove());
 
-        Animal animal = new Animal(sex, diet, actions, moveSpeedPercentage, speciesUUID, false, 0, maturityAgePercentage, gestationSpeedPercentage, litterSizePercentage, maxAgePercentage, 0, 100, metabolismPercentage, hungerLimitToEatPercentage);
+        Animal animal = new Animal(sex, diet, actions, moveSpeedPercentage, speciesId, false, 0, maturityAgePercentage, gestationSpeedPercentage, litterSizePercentage, maxAgePercentage, 0, 100, metabolismPercentage, hungerLimitToEatPercentage);
         synchronized(biome) {
             biome.addAnimal(animal);
         }

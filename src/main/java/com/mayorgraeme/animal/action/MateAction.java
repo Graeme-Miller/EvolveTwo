@@ -16,7 +16,10 @@ public class MateAction implements Action {
     @Override
     public boolean perform(Animal animal, Biome biome) {
 
+        System.out.println("Mate action");
+
         if(animal.getMaturityAge() > animal.getAge()) {
+            System.out.println("Mate action: too young. maturity age: "+animal.getMaturityAge() + " age: "+ animal.getAge());
             return false;
         }
 
@@ -70,7 +73,7 @@ public class MateAction implements Action {
     }
 
     public boolean performMatingAction(Animal animal, Biome biome){
-
+        System.out.println("Mate action: trying to mate");
 
         Optional<InhabitantCoordinates> inhabitantCoordinatesOptional = biome.getInhabitantCoordinatesStream(animal, animal.getMoveSpeed())
                 .filter(inhabitantCoordinates -> {
@@ -89,16 +92,19 @@ public class MateAction implements Action {
                 }).findFirst();
 
 
-
+        System.out.println("Mate action: found mate? "+inhabitantCoordinatesOptional);
         if(!inhabitantCoordinatesOptional.isPresent()){
+            System.out.println("Mate action: no mate found returning");
             return false;
         }
 
         Animal mate = (Animal)inhabitantCoordinatesOptional.get().getInhabitant();
         if(mate.getSex() == Sex.FEMALE){
+            System.out.println("Mate action: impregnating");
             mate.setPregnant(true);
             mate.setPregnancyCountdown(mate.getGestationSpeed());
         } else {
+            System.out.println("Mate action: being impregnated");
             animal.setPregnant(true);
             animal.setPregnancyCountdown(animal.getGestationSpeed());
         }

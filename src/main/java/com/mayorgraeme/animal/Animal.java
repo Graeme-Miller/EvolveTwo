@@ -19,7 +19,7 @@ public class Animal implements Inhabitant {
     private List<Action> actions;
 
     private UUID id;
-    private UUID speciesId;
+    private String speciesId;
 
     private int moveSpeedPercentage;
     private int moveSpeed;
@@ -50,7 +50,7 @@ public class Animal implements Inhabitant {
                        Diet diet,
                        List<Action> actions,
                        int moveSpeedPercentage,
-                       UUID speciesId,
+                       String speciesId,
                        boolean isPregnant,
                        int pregnancyCountdown,
                        int maturityAgePercentage,
@@ -120,7 +120,7 @@ public class Animal implements Inhabitant {
     }
 
     
-    public UUID getSpeciesId() {
+    public String getSpeciesId() {
         return speciesId;
     }
 

@@ -1,7 +1,7 @@
 import docker, requests, time, random, subprocess
 
 
-def addAnimals(url, number, diet):
+def addAnimals(url, speciesId, number, diet):
 
     moveSpeedPercentage = random.randint(20, 100),
     maturityAgePercentage = random.randint(20, 100),
@@ -21,6 +21,7 @@ def addAnimals(url, number, diet):
         r = requests.put(url+"/animal", data={
             'sex': sex,
             'diet':diet,
+            'speciesId': speciesId,
             'moveSpeedPercentage':  moveSpeedPercentage,
             'maturityAgePercentage':  maturityAgePercentage,
             'gestationSpeedPercentage':  gestationSpeedPercentage,
@@ -69,7 +70,7 @@ for x in range(0, numberToCreate):
     url = 'http://localhost:%s'%portToExpose    
         
     #Add herbivores
-    addAnimals(url, random.randint(100, 500), "HERBIVORE")    
+    addAnimals(url, "herb-1", random.randint(100, 500), "HERBIVORE")    
     # addAnimals(url, random.randint(20, 100), "CARNIVORE")       
     
 print "------------------------Started------------------------"    

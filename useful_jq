@@ -1,14 +1,18 @@
 #remove all evotwo
 docker ps -a | awk '{ print $1,$2 }' | grep evotwo | awk '{print $1 }' | xargs -I {} docker rm -f {}
 
+
 #Select animals
+curl -s localhost:8080 | jq 'map(select(.inhabitant != null))' | jq 'map(select(.inhabitant.identifier != "Ve"))' | jq '.[]|.inhabitant' 
+
+#Count animals
 curl -s localhost:8080 | jq 'map(select(.inhabitant != null))' | jq 'map(select(.inhabitant.identifier != "Ve"))' | jq '.[]|.inhabitant.age' | wc -l
 
 #Select vegetables
 curl -s localhost:8080 | jq 'map(select(.inhabitant != null))' | jq 'map(select(.inhabitant.identifier == "Ve"))' | jq '.[]|.inhabitant.age' | wc -l
 
 #select inhab by ident
-curl -s localhost:8080 | jq 'map(select(.inhabitant.id = "520ad9f3-91e2-46a3-82f3-2a297aa1b991"))'
+curl -s localhost:8080 | jq 'map(select(.inhabitant.id = "dcc1e4e4-e953-49d5-b78a-b266d41c7732"))'
 
 #change config
 curl -X PUT -d vegetationSpawnRate=100 localhost:8080/vegetationSpawnRate
