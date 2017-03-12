@@ -103,7 +103,7 @@ public class BiomeController {
     @RequestMapping(path = "/vegetationNutrition", method = RequestMethod.PUT)
     public void setConfigurationVegetationNutrition(int vegetationNutrition){
         this.vegetationNutrition = vegetationNutrition;
-        this.setConfigurationVegetationNutrition(vegetationNutrition);
+        biome.setConfigurationVegetationNutrition(vegetationNutrition);
     }
 
     @RequestMapping(path = "/animal", method = RequestMethod.PUT)
