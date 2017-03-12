@@ -18,6 +18,9 @@ public class Animal implements Inhabitant {
     @JsonIgnore
     private List<Action> actions;
 
+    @JsonIgnore
+    private AnimalBuilder childBuilder;
+
     private UUID id;
     private String speciesId;
 
@@ -60,7 +63,8 @@ public class Animal implements Inhabitant {
                        int age,
                        int hunger,
                        int metabolismPercentage,
-                       int hungerLimitToEatPercentage) {
+                       int hungerLimitToEatPercentage,
+                       AnimalBuilder childBuilder) {
         this.sex = sex;
         this.diet = diet;
         this.actions = actions;
@@ -77,6 +81,7 @@ public class Animal implements Inhabitant {
         this.hunger = hunger;
         this.metabolismPercentage = metabolismPercentage;
         this.hungerLimitToEatPercentage = hungerLimitToEatPercentage;
+        this.childBuilder = childBuilder;
 
         
          moveSpeed = PercentageToValue.moveSpeedConversion(moveSpeedPercentage);
@@ -204,6 +209,14 @@ public class Animal implements Inhabitant {
 
     public int getHungerLimitToEat() {
         return hungerLimitToEat;
+    }
+
+    public AnimalBuilder getChildBuilder() {
+        return childBuilder;
+    }
+
+    public void setChildBuilder(AnimalBuilder childBuilder) {
+        this.childBuilder = childBuilder;
     }
 
     public boolean equals(Object o) {
