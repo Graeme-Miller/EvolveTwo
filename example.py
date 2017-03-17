@@ -1,4 +1,4 @@
-import docker, requests, time, random, subprocess
+import docker, requests, time, random, subprocess, datetime
 
 
 def addAnimals(url, speciesId, number, diet):
@@ -9,10 +9,11 @@ def addAnimals(url, speciesId, number, diet):
     litterSizePercentage = random.randint(20, 100),
     maxAgePercentage = random.randint(20, 100),
     metabolismPercentage = random.randint(20, 100),
-    hungerLimitToEatPercentage = random.randint(20, 100)    
+    hungerLimitToEatPercentage = random.randint(20, 100)
+    geneticMutationPercentage = random.randint(20, 100)
     
-    print "Adding {} {} animals to {}. moveSpeedPercentage {} maturityAgePercentage {} gestationSpeedPercentage {} litterSizePercentage {} maxAgePercentage {} metabolismPercentage {} hungerLimitToEatPercentage {}".format(number, diet, url, moveSpeedPercentage, maturityAgePercentage, gestationSpeedPercentage, litterSizePercentage, maxAgePercentage, maxAgePercentage, maxAgePercentage)
-    
+    #print "Adding {} {} animals to {}. moveSpeedPercentage {} maturityAgePercentage {} gestationSpeedPercentage {} litterSizePercentage {} maxAgePercentage {} metabolismPercentage {} hungerLimitToEatPercentage {}".format(number, diet, url, moveSpeedPercentage, maturityAgePercentage, gestationSpeedPercentage, litterSizePercentage, maxAgePercentage, maxAgePercentage, maxAgePercentage)
+
     for x in range(0, number):
         sex = "FEMALE"
         if(x%2==0):
@@ -28,39 +29,45 @@ def addAnimals(url, speciesId, number, diet):
             'litterSizePercentage':  litterSizePercentage,
             'maxAgePercentage':  maxAgePercentage,
             'metabolismPercentage':  metabolismPercentage,
-            'hungerLimitToEatPercentage': hungerLimitToEatPercentage
+            'hungerLimitToEatPercentage': hungerLimitToEatPercentage,
+            'geneticMutationPercentage': geneticMutationPercentage
         })
 
-client = docker.from_env()
-numberToCreate = 5
-
-print "starting containers"
-for x in range(0, numberToCreate):
-    portToExpose = '9%03d'%x    
-    client.containers.run("evotwo", detach=True, ports={8080: portToExpose})
-
-print "adding vegetation"
-for x in range(0, numberToCreate):   
-    portToExpose = '9%03d'%x        
-    url = 'http://localhost:%s'%portToExpose    
-    
-    print "Checking web service is up: "+url
-    continueStatusCheck = True 
+def addVegetation(url):
+    #print "Checking web service is up: "+url
+    continueStatusCheck = True
     while (continueStatusCheck):
       time.sleep(2)
       try:
         continueStatusCheck = requests.get(url).status_code != 200
       except:
-       print "exception checking status, ignoring"        
-       
-    #Set vegetation    
+        pass
+      # print "exception checking status, ignoring"
+
+    #Set vegetation
     vegetationSpawnRate = random.randint(1, 150)
     vegetationMaxAge = random.randint(1, 50)
     vegetationNutrition = random.randint(1, 100)
-    print "setting vegetation for url {}. vegetationSpawnRate {} vegetationMaxAge {} vegetationNutrition {}".format(url, vegetationSpawnRate, vegetationMaxAge, vegetationNutrition)
+    #print "setting vegetation for url {}. vegetationSpawnRate {} vegetationMaxAge {} vegetationNutrition {}".format(url, vegetationSpawnRate, vegetationMaxAge, vegetationNutrition)
     r = requests.put(url+"/vegetationSpawnRate", data={'vegetationSpawnRate': vegetationSpawnRate})
     r = requests.put(url+"/vegetationMaxAge", data={'vegetationMaxAge': vegetationMaxAge})
     r = requests.put(url+"/vegetationNutrition", data={'vegetationNutrition': vegetationNutrition})
+
+client = docker.from_env()
+numberToCreate = 2
+
+print "starting containers"
+containerDictionary = dict()
+for x in range(0, numberToCreate):
+    portToExpose = '9%03d'%x
+    containerDictionary[portToExpose] = datetime.datetime.now().time()
+    client.containers.run("evotwo", detach=True, ports={8080: portToExpose})
+
+print "adding vegetation"
+for x in range(0, numberToCreate):   
+    portToExpose = '9%03d'%x
+    url = 'http://localhost:%s'%portToExpose
+    addVegetation(url)
 
 print "waiting for vegetation to grow"
 time.sleep(20) #allow vegetation to develop    
@@ -70,8 +77,11 @@ for x in range(0, numberToCreate):
     url = 'http://localhost:%s'%portToExpose    
         
     #Add herbivores
-    addAnimals(url, "herb-1", random.randint(100, 500), "HERBIVORE")    
-    # addAnimals(url, random.randint(20, 100), "CARNIVORE")       
+    addAnimals(url, "herb-1", random.randint(50, 100), "HERBIVORE")
+    addAnimals(url, "herb-2", random.randint(50, 100), "HERBIVORE")
+    addAnimals(url, "herb-3", random.randint(50, 100), "HERBIVORE")
+
+    addAnimals(url, "carn-3", random.randint(50, 100), "CARNIVORE")
     
 print "------------------------Started------------------------"    
 
@@ -85,8 +95,22 @@ while (True):
         carnivores =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.inhabitant.diet == \"CARNIVORE\"))' | jq '.[]|.inhabitant.age' | wc -l", shell=True).rstrip()
         vegitation =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.inhabitant.identifier == \"Ve\"))' | jq '.[]|.inhabitant.age' | wc -l", shell=True).rstrip()
         pregnant =     subprocess.check_output("curl -s "+url+" | jq 'map(select(.inhabitant != null))' | jq 'map(select(.inhabitant.identifier != \"Ve\"))' | jq 'map(select(.inhabitant.pregnancyCountdown != 0))' | jq '.[]|.inhabitant.age' | wc -l", shell=True).rstrip()
-        
-        print "{}: total animals={}\therbivores={}\tcarnivores={}\tvegitation={}\tpregnant={}".format(portToExpose,totalAnimals,herbivores,carnivores,vegitation, pregnant)
+
+        print "{}: time started={}\ttotal animals={}\therbivores={}\tcarnivores={}\tvegitation={}\tpregnant={}".format(portToExpose, containerDictionary[portToExpose], totalAnimals,herbivores,carnivores,vegitation, pregnant)
+
+        if(int(totalAnimals) == 0):
+            command = "docker ps -a | grep \"0.0.0.0:"+portToExpose+"->8080\" |  awk \'{print $1 }\' | xargs -I {} docker rm -f {}"
+            subprocess.check_output(command, shell=True)
+            containerDictionary[portToExpose] = datetime.datetime.now().time()
+            client.containers.run("evotwo", detach=True, ports={8080: portToExpose})
+
+            addVegetation(url)
+            addAnimals(url, "herb-1", random.randint(50, 100), "HERBIVORE")
+            addAnimals(url, "herb-2", random.randint(50, 100), "HERBIVORE")
+            addAnimals(url, "herb-3", random.randint(50, 100), "HERBIVORE")
+
+            addAnimals(url, "carn-3", random.randint(50, 100), "CARNIVORE")
+
     print "------------------------CHECK------------------------"
     time.sleep(2)
         

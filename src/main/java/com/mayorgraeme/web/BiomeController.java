@@ -118,7 +118,8 @@ public class BiomeController {
             int litterSizePercentage,
             int maxAgePercentage,
             int metabolismPercentage,
-            int hungerLimitToEatPercentage) {
+            int hungerLimitToEatPercentage,
+            int geneticMutationPercentage) {
 
         List<Action> actions = new ArrayList<>();
         actions.add(new AgeAction());
@@ -126,7 +127,7 @@ public class BiomeController {
         actions.add(new MateAction());
         actions.add(new RandomMove());
 
-        Animal animal = new Animal(sex, diet, actions, moveSpeedPercentage, speciesId, false, 0, maturityAgePercentage, gestationSpeedPercentage, litterSizePercentage, maxAgePercentage, 0, 100, metabolismPercentage, hungerLimitToEatPercentage, null);
+        Animal animal = new Animal(sex, diet, actions, moveSpeedPercentage, speciesId, false, 0, maturityAgePercentage, gestationSpeedPercentage, litterSizePercentage, maxAgePercentage, 0, 100, metabolismPercentage, hungerLimitToEatPercentage, null, geneticMutationPercentage);
         synchronized(biome) {
             biome.addAnimal(animal);
         }

@@ -26,6 +26,8 @@ public class AnimalBuilder {
     private int metabolismPercentage;
     private int hungerLimitToEatPercentage;
 
+    private int geneticMutationPercentage;
+
     public Sex getSex() {
         return sex;
     }
@@ -146,6 +148,14 @@ public class AnimalBuilder {
         this.hungerLimitToEatPercentage = hungerLimitToEatPercentage;
     }
 
+    public int getGeneticMutationPercentage() {
+        return geneticMutationPercentage;
+    }
+
+    public void setGeneticMutationPercentage(int geneticMutationPercentage) {
+        this.geneticMutationPercentage = geneticMutationPercentage;
+    }
+
     public Animal buildAnimal() {
         return new Animal(sex,
                 diet,
@@ -162,6 +172,7 @@ public class AnimalBuilder {
                 hunger,
                 metabolismPercentage,
                 hungerLimitToEatPercentage,
-                null);
+                null,
+                geneticMutationPercentage);
     }
 }

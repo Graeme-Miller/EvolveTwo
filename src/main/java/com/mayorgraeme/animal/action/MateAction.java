@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.animal.AnimalBuilder;
@@ -111,41 +113,39 @@ public class MateAction implements Action {
             sex = Sex.FEMALE;
         }
 
-        Animal parentToInheritFrom;
-        if (RandomUtil.shouldPeformAction(50)) {
-            parentToInheritFrom = parentOne;
-        } else {
-            parentToInheritFrom = parentTwo;
-        }
-
         AnimalBuilder builder = new AnimalBuilder();
+        builder.setGeneticMutationPercentage(randomiseAnimalPercentage(parentOne.getGeneticMutationPercentage(), parentTwo.getGeneticMutationPercentage(), parentOne.getGeneticMutationPercentage()));
         builder.setSex(sex);
-        builder.setDiet(parentToInheritFrom.getDiet());
-        builder.setActions(parentToInheritFrom.getActions());
-        builder.setMoveSpeedPercentage(randomiseAnimalPercentage(parentToInheritFrom.getMoveSpeedPercentage()));
-        builder.setSpeciesId(parentToInheritFrom.getSpeciesId());
+        builder.setDiet(parentOne.getDiet());
+        builder.setActions(parentOne.getActions());
+        builder.setMoveSpeedPercentage(randomiseAnimalPercentage(parentOne.getMoveSpeedPercentage(), parentTwo.getMoveSpeedPercentage(), builder.getGeneticMutationPercentage()));
+        builder.setSpeciesId(parentOne.getSpeciesId());
         builder.setPregnant(false);
         builder.setPregnancyCountdown(0);
-        builder.setMaturityAgePercentage(randomiseAnimalPercentage(parentToInheritFrom.getMaturityAgePercentage()));
-        builder.setGestationSpeedPercentage(randomiseAnimalPercentage(parentToInheritFrom.getGestationSpeedPercentage()));
-        builder.setLitterSizePercentage(randomiseAnimalPercentage(parentToInheritFrom.getLitterSizePercentage()));
-        builder.setMaxAgePercentage(randomiseAnimalPercentage(parentToInheritFrom.getMaxAgePercentage()));
+        builder.setMaturityAgePercentage(randomiseAnimalPercentage(parentOne.getMaturityAgePercentage(), parentTwo.getMaturityAgePercentage(), builder.getGeneticMutationPercentage()));
+        builder.setGestationSpeedPercentage(randomiseAnimalPercentage(parentOne.getGestationSpeedPercentage(), parentTwo.getGestationSpeedPercentage(), builder.getGeneticMutationPercentage()));
+        builder.setLitterSizePercentage(randomiseAnimalPercentage(parentOne.getLitterSizePercentage(), parentTwo.getLitterSizePercentage(), builder.getGeneticMutationPercentage()));
+        builder.setMaxAgePercentage(randomiseAnimalPercentage(parentOne.getMaxAgePercentage(), parentTwo.getMaxAgePercentage(), builder.getGeneticMutationPercentage()));
         builder.setAge(0);
         builder.setHunger(100);
-        builder.setMetabolismPercentage(randomiseAnimalPercentage(parentToInheritFrom.getMetabolismPercentage()));
-        builder.setHungerLimitToEatPercentage(randomiseAnimalPercentage(parentToInheritFrom.getHungerLimitToEatPercentage()));
+        builder.setMetabolismPercentage(randomiseAnimalPercentage(parentOne.getMetabolismPercentage(), parentTwo.getMetabolismPercentage(), builder.getGeneticMutationPercentage()));
+        builder.setHungerLimitToEatPercentage(randomiseAnimalPercentage(parentOne.getHungerLimitToEatPercentage(), parentTwo.getHungerLimitToEatPercentage(), builder.getGeneticMutationPercentage()));
 
         return builder;
     }
 
-    private int randomiseAnimalPercentage(int percentage){
-        int newPercentage;
-        if (RandomUtil.shouldPeformAction(50)) {
-            newPercentage = percentage + random.nextInt(6);
-        } else {
-            newPercentage = percentage - random.nextInt(6);
+    private int randomiseAnimalPercentage(int valueOne, int valueTwo, int geneticMutationPercentage){
+
+        Mean mean = new Mean();
+        mean.increment(valueOne);
+        mean.increment(valueTwo);
+
+        int result = Math.round((long)mean.getResult());
+
+        if (RandomUtil.shouldPeformAction(geneticMutationPercentage)) {
+            result += random.nextInt(6);
         }
 
-        return Math.min(Math.max(0, newPercentage), 100); //bound between
+        return Math.min(Math.max(0, result), 100); //bound between
     }
 }

@@ -47,7 +47,8 @@ public class Animal implements Inhabitant {
     private int hungerLimitToEatPercentage;
     private int hungerLimitToEat;
 
-
+    private int geneticMutation;
+    private int geneticMutationPercentage;
 
     public Animal(Sex sex,
                        Diet diet,
@@ -64,7 +65,8 @@ public class Animal implements Inhabitant {
                        int hunger,
                        int metabolismPercentage,
                        int hungerLimitToEatPercentage,
-                       AnimalBuilder childBuilder) {
+                       AnimalBuilder childBuilder,
+                       int geneticMutationPercentage) {
         this.sex = sex;
         this.diet = diet;
         this.actions = actions;
@@ -82,7 +84,7 @@ public class Animal implements Inhabitant {
         this.metabolismPercentage = metabolismPercentage;
         this.hungerLimitToEatPercentage = hungerLimitToEatPercentage;
         this.childBuilder = childBuilder;
-
+        this.geneticMutationPercentage = geneticMutationPercentage;
         
          moveSpeed = PercentageToValue.moveSpeedConversion(moveSpeedPercentage);
          maturityAge = PercentageToValue.maturityAgeConversion(maturityAgePercentage);
@@ -91,7 +93,7 @@ public class Animal implements Inhabitant {
          maxAge = PercentageToValue.maxAgeConversion(maxAgePercentage);
          metabolism = PercentageToValue.metabolismConversion(metabolismPercentage);
          hungerLimitToEat = PercentageToValue.hungerLimitToEatConversion(hungerLimitToEatPercentage);
-
+        geneticMutation = PercentageToValue.geneticMutationPercentageConversion(geneticMutationPercentage);
     }
 
     
@@ -209,6 +211,14 @@ public class Animal implements Inhabitant {
 
     public int getHungerLimitToEat() {
         return hungerLimitToEat;
+    }
+
+    public int getGeneticMutation() {
+        return geneticMutation;
+    }
+
+    public int getGeneticMutationPercentage() {
+        return geneticMutationPercentage;
     }
 
     public AnimalBuilder getChildBuilder() {

@@ -26,6 +26,8 @@ public class PercentageToValue {
     private static int HUNGER_LIMIT_MIN = 5;
     private static int HUNGER_LIMIT_MAX = 50;
 
+    private static int GENETIC_MUTATION_MIN = 20;
+    private static int GENETIC_MUTATION_MAX = 50;
 
     private static int conversion(int percent, int min, int max) {
         double percentAsDouble = (double)percent/100d;
@@ -53,5 +55,9 @@ public class PercentageToValue {
     }
     public static int hungerLimitToEatConversion(int hungerLimitToEatPercentage){
         return conversion(hungerLimitToEatPercentage, HUNGER_LIMIT_MIN, HUNGER_LIMIT_MAX);
+    }
+
+    public static int geneticMutationPercentageConversion(int geneticMutationPercentage) {
+        return conversion(geneticMutationPercentage, GENETIC_MUTATION_MIN, GENETIC_MUTATION_MAX);
     }
 }
