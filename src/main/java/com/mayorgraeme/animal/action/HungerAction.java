@@ -21,7 +21,7 @@ public class HungerAction implements Action {
         int newHunger = animal.getHunger() - animal.getMetabolism();
         if(newHunger <= 0) {
             biome.removeAnimal(animal);
-            System.out.println("Animal "+animal+" died due to hunger");
+            System.out.println("Animal died due to hunger"+animal);
             return true;
         }
         animal.setHunger(newHunger);
@@ -65,11 +65,12 @@ public class HungerAction implements Action {
                             || !(inhabitantCoordinate.getInhabitant() instanceof Animal ))
                         return false;
             Animal animalInhabitant = (Animal)inhabitantCoordinate.getInhabitant();
-            return animal.getSpeciesId() != animalInhabitant.getSpeciesId();
+            return !animal.getSpeciesId().equals(animalInhabitant.getSpeciesId());
 
                 }
         ).collect(Collectors.toList());
 
+        System.out.println("Carnivore list size: "+dinnerOptions.size());
         if(dinnerOptions.isEmpty())
             return false;
         //TODO taking random from list, should consider:

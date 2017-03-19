@@ -5,14 +5,14 @@ package com.mayorgraeme.animal;
  */
 public class PercentageToValue {
 
-    private static int MOVE_SPEED_MIN = 1;
-    private static int MOVE_SPEED_MAX = 5;
+    private static int MOVE_SPEED_MIN = 5;
+    private static int MOVE_SPEED_MAX = 15;
 
     private static int MATURITY_AGE_MIN = 10;
     private static int MATURITY_AGE_MAX = 100;
 
-    private static int GESTATION_SPEED_MIN = 30;
-    private static int GESTATION_SPEED_MAX = 100;
+    private static int GESTATION_SPEED_MIN = 20;
+    private static int GESTATION_SPEED_MAX = 80;
 
     private static int LITTER_SIZE_MIN = 1;
     private static int LITTER_SIZE_MAX = 10;
@@ -20,8 +20,8 @@ public class PercentageToValue {
     private static int MAX_AGE_MIN = 50;
     private static int MAX_AGE_MAX = 300;
 
-    private static int METABOLISM_MIN = 5;
-    private static int METABOLISM_MAX = 20;
+    private static int METABOLISM_MIN = 1;
+    private static int METABOLISM_MAX = 15;
 
     private static int HUNGER_LIMIT_MIN = 5;
     private static int HUNGER_LIMIT_MAX = 50;

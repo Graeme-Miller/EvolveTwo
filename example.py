@@ -1,6 +1,9 @@
 import docker, requests, time, random, subprocess, datetime
 
 
+client = docker.from_env()
+numberToCreate = 5
+
 def addAnimals(url, speciesId, number, diet):
 
     moveSpeedPercentage = random.randint(20, 100),
@@ -53,8 +56,6 @@ def addVegetation(url):
     r = requests.put(url+"/vegetationMaxAge", data={'vegetationMaxAge': vegetationMaxAge})
     r = requests.put(url+"/vegetationNutrition", data={'vegetationNutrition': vegetationNutrition})
 
-client = docker.from_env()
-numberToCreate = 2
 
 print "starting containers"
 containerDictionary = dict()
@@ -98,7 +99,7 @@ while (True):
 
         print "{}: time started={}\ttotal animals={}\therbivores={}\tcarnivores={}\tvegitation={}\tpregnant={}".format(portToExpose, containerDictionary[portToExpose], totalAnimals,herbivores,carnivores,vegitation, pregnant)
 
-        if(int(totalAnimals) == 0):
+        if(int(carnivores) == 0):
             command = "docker ps -a | grep \"0.0.0.0:"+portToExpose+"->8080\" |  awk \'{print $1 }\' | xargs -I {} docker rm -f {}"
             subprocess.check_output(command, shell=True)
             containerDictionary[portToExpose] = datetime.datetime.now().time()
