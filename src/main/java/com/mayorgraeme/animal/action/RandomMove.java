@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.mayorgraeme.animal.Animal;
-import com.mayorgraeme.animal.InhabitantCoordinates;
+import com.mayorgraeme.biome.InhabitantCoordinates;
 import com.mayorgraeme.biome.Biome;
 
 /**
@@ -21,7 +21,7 @@ public class RandomMove implements Action {
     @Override
     public boolean perform(Animal animal, Biome biome) {
         Stream<InhabitantCoordinates> inhabitantCoordinatesStream = biome.getInhabitantCoordinatesStream(animal, animal.getMoveSpeedPercentage());
-        List<InhabitantCoordinates> coordinateList  = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null).collect(Collectors.toList());
+        List<InhabitantCoordinates> coordinateList  = inhabitantCoordinatesStream.filter(inhabitantCoordinates -> inhabitantCoordinates.getAnimal() == null).collect(Collectors.toList());
 
         if(coordinateList.isEmpty())
             return false;

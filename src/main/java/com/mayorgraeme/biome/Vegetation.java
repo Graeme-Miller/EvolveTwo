@@ -3,7 +3,7 @@ package com.mayorgraeme.biome;
 /**
  * Created by graememiller on 25/02/2017.
  */
-public class Vegetation implements Inhabitant {
+public class Vegetation {
 
     private int age;
     private int nutrition;
@@ -35,10 +35,5 @@ public class Vegetation implements Inhabitant {
                 "age=" + age +
                 ", nutrition=" + nutrition +
                 '}';
-    }
-
-    @Override
-    public String getIdentifier() {
-        return "Ve";
     }
 }

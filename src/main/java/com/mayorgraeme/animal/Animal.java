@@ -5,12 +5,11 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mayorgraeme.animal.action.Action;
-import com.mayorgraeme.biome.Inhabitant;
 
 /**
  * Created by graememiller on 21/02/2017.
  */
-public class Animal implements Inhabitant {
+public class Animal {
 
     private Sex sex;
     private Diet diet;
@@ -241,16 +240,6 @@ public class Animal implements Inhabitant {
     
     public int hashCode() {
         return id.hashCode();
-    }
-
-//    
-//    public String getIdentifier() {
-//        return getSpeciesId().toString().substring(0, 2);
-//    }
-
-    
-    public String getIdentifier() {
-        return getDiet().toString().substring(0, 2);
     }
 
     @Override

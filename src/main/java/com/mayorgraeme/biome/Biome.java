@@ -2,11 +2,7 @@ package com.mayorgraeme.biome;
 
 import java.util.stream.Stream;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.mayorgraeme.animal.Animal;
-import com.mayorgraeme.animal.InhabitantCoordinates;
 import com.mayorgraeme.util.Coordinate;
 
 /**

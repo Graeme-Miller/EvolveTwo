@@ -3,16 +3,16 @@ docker ps -a | awk '{ print $1,$2 }' | grep evotwo | awk '{print $1 }' | xargs -
 
 
 #Select animals
-curl -s localhost:8080 | jq 'map(select(.inhabitant != null))' | jq 'map(select(.inhabitant.identifier != "Ve"))' | jq '.[]|.inhabitant' 
+curl -s localhost:8080 |  jq 'map(select(.animal != null))'
 
 #Count animals
-curl -s localhost:8080 | jq 'map(select(.inhabitant != null))' | jq 'map(select(.inhabitant.identifier != "Ve"))' | jq '.[]|.inhabitant.age' | wc -l
+curl -s localhost:8080 | jq 'map(select(.animal != null))' | jq '.[]|.animal.age' | wc -l
 
-#Select vegetables
-curl -s localhost:8080 | jq 'map(select(.inhabitant != null))' | jq 'map(select(.inhabitant.identifier == "Ve"))' | jq '.[]|.inhabitant.age' | wc -l
+#count vegetables
+curl -s localhost:8080 | jq 'map(select(.vegetation != null))' | jq '.[]|.vegetable.age' | wc -l
 
 #select inhab by ident
-curl -s localhost:8080 | jq 'map(select(.inhabitant.id = "dcc1e4e4-e953-49d5-b78a-b266d41c7732"))'
+curl -s localhost:8080 | jq 'map(select(.animal.id = "dcc1e4e4-e953-49d5-b78a-b266d41c7732"))'
 
 #change config
 curl -X PUT -d vegetationSpawnRate=100 localhost:8080/vegetationSpawnRate

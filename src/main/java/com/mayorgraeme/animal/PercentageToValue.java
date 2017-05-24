@@ -5,8 +5,8 @@ package com.mayorgraeme.animal;
  */
 public class PercentageToValue {
 
-    private static int MOVE_SPEED_MIN = 5;
-    private static int MOVE_SPEED_MAX = 15;
+    private static int MOVE_SPEED_MIN = 5000;
+    private static int MOVE_SPEED_MAX = 6000;
 
     private static int MATURITY_AGE_MIN = 10;
     private static int MATURITY_AGE_MAX = 100;

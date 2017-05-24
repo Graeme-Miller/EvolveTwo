@@ -91,11 +91,11 @@ while (True):
         portToExpose = '9%03d'%x
         url = 'http://localhost:%s'%portToExpose
                 
-        totalAnimals = subprocess.check_output("curl -s "+url+" | jq 'map(select(.inhabitant != null))' | jq 'map(select(.inhabitant.identifier != \"Ve\"))' | jq '.[]|.inhabitant.age' | wc -l", shell=True).rstrip()
-        herbivores =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.inhabitant.diet == \"HERBIVORE\"))' | jq '.[]|.inhabitant.age' | wc -l", shell=True).rstrip()
-        carnivores =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.inhabitant.diet == \"CARNIVORE\"))' | jq '.[]|.inhabitant.age' | wc -l", shell=True).rstrip()
-        vegitation =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.inhabitant.identifier == \"Ve\"))' | jq '.[]|.inhabitant.age' | wc -l", shell=True).rstrip()
-        pregnant =     subprocess.check_output("curl -s "+url+" | jq 'map(select(.inhabitant != null))' | jq 'map(select(.inhabitant.identifier != \"Ve\"))' | jq 'map(select(.inhabitant.pregnancyCountdown != 0))' | jq '.[]|.inhabitant.age' | wc -l", shell=True).rstrip()
+        totalAnimals = subprocess.check_output("curl -s "+url+" | jq 'map(select(.animal != null))' | jq '.[]|.animal.age' | wc -l", shell=True).rstrip()
+        herbivores =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.animal.diet == \"HERBIVORE\"))' | jq '.[]|.animal.age' | wc -l", shell=True).rstrip()
+        carnivores =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.animal.diet == \"CARNIVORE\"))' | jq '.[]|.animal.age' | wc -l", shell=True).rstrip()
+        vegitation =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.vegetation != null))' | jq '.[]|.vegetation.age' | wc -l", shell=True).rstrip()
+        pregnant =     subprocess.check_output("curl -s "+url+" | jq 'map(select(.animal != null))' | jq 'map(select(.animal.pregnancyCountdown != 0))' | jq '.[]|.animal.age' | wc -l", shell=True).rstrip()
 
         print "{}: time started={}\ttotal animals={}\therbivores={}\tcarnivores={}\tvegitation={}\tpregnant={}".format(portToExpose, containerDictionary[portToExpose], totalAnimals,herbivores,carnivores,vegitation, pregnant)
 
@@ -106,11 +106,9 @@ while (True):
             client.containers.run("evotwo", detach=True, ports={8080: portToExpose})
 
             addVegetation(url)
-            addAnimals(url, "herb-1", random.randint(50, 100), "HERBIVORE")
-            addAnimals(url, "herb-2", random.randint(50, 100), "HERBIVORE")
-            addAnimals(url, "herb-3", random.randint(50, 100), "HERBIVORE")
+            addAnimals(url, "herb-1", random.randint(900, 1000), "HERBIVORE")
 
-            addAnimals(url, "carn-3", random.randint(50, 100), "CARNIVORE")
+            addAnimals(url, "carn-3", random.randint(190, 200), "CARNIVORE")
 
     print "------------------------CHECK------------------------"
     time.sleep(2)

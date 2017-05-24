@@ -1,6 +1,6 @@
-package com.mayorgraeme.animal;
+package com.mayorgraeme.biome;
 
-import com.mayorgraeme.biome.Inhabitant;
+import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.util.Coordinate;
 
 /**
@@ -10,7 +10,8 @@ public class InhabitantCoordinates {
 
 
     private final int x,y;
-    private Inhabitant inhabitant;
+    private Animal animal;
+    private Vegetation vegetation;
     private Coordinate coordinate;
 
     public InhabitantCoordinates(int x, int y) {
@@ -31,12 +32,20 @@ public class InhabitantCoordinates {
         return coordinate;
     }
 
-    public Inhabitant getInhabitant() {
-        return inhabitant;
+    public Animal getAnimal() {
+        return animal;
     }
 
-    public void setInhabitant(Inhabitant inhabitant) {
-        this.inhabitant = inhabitant;
+    public void setAnimal(Animal animal) {
+        this.animal = animal;
+    }
+
+    public Vegetation getVegetation() {
+        return vegetation;
+    }
+
+    public void setVegetation(Vegetation vegetation) {
+        this.vegetation = vegetation;
     }
 
     @Override
@@ -44,7 +53,9 @@ public class InhabitantCoordinates {
         return "InhabitantCoordinates{" +
                 "x=" + x +
                 ", y=" + y +
-                ", inhabitant=" + inhabitant +
+                ", animal=" + animal +
+                ", vegetation=" + vegetation +
+                ", coordinate=" + coordinate +
                 '}';
     }
 }

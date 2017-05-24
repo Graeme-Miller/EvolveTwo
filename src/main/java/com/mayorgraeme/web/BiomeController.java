@@ -3,7 +3,6 @@ package com.mayorgraeme.web;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.animal.Diet;
-import com.mayorgraeme.animal.InhabitantCoordinates;
+import com.mayorgraeme.biome.InhabitantCoordinates;
 import com.mayorgraeme.animal.Sex;
 import com.mayorgraeme.animal.action.Action;
 import com.mayorgraeme.animal.action.AgeAction;

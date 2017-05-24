@@ -1,17 +1,13 @@
 package com.mayorgraeme.animal.action;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.UUID;
 
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.animal.AnimalBuilder;
-import com.mayorgraeme.animal.Diet;
-import com.mayorgraeme.animal.InhabitantCoordinates;
+import com.mayorgraeme.biome.InhabitantCoordinates;
 import com.mayorgraeme.animal.Sex;
 import com.mayorgraeme.biome.Biome;
 import com.mayorgraeme.util.RandomUtil;
@@ -52,7 +48,7 @@ public class MateAction implements Action {
         animal.setChildBuilder(null);
 
         biome.getInhabitantCoordinatesStream(animal, animal.getMoveSpeed())
-                .filter(inhabitantCoordinates -> inhabitantCoordinates.getInhabitant() == null)
+                .filter(inhabitantCoordinates -> inhabitantCoordinates.getAnimal() == null)
                 .limit(animal.getLitterSize()).forEach(inhabitantCoordinates -> {
 
             biome.addAnimal(childBuilder.buildAnimal(), inhabitantCoordinates.getCoordinate());
@@ -67,12 +63,10 @@ public class MateAction implements Action {
         Optional<InhabitantCoordinates> inhabitantCoordinatesOptional = biome.getInhabitantCoordinatesStream(animal, animal.getMoveSpeed())
                 .filter(inhabitantCoordinates -> {
 
-                    if (inhabitantCoordinates.getInhabitant() == null)
-                        return false;
-                    if (!(inhabitantCoordinates.getInhabitant() instanceof Animal))
+                    if (inhabitantCoordinates.getAnimal() == null)
                         return false;
 
-                    Animal filterAnimal = (Animal) inhabitantCoordinates.getInhabitant();
+                    Animal filterAnimal = inhabitantCoordinates.getAnimal();
                     return  !animal.isPregnant() &&
                             !filterAnimal.isPregnant() &&
                             filterAnimal.getAge() > filterAnimal.getMaturityAge() &&
@@ -87,7 +81,7 @@ public class MateAction implements Action {
             return false;
         }
 
-        Animal mate = (Animal)inhabitantCoordinatesOptional.get().getInhabitant();
+        Animal mate = inhabitantCoordinatesOptional.get().getAnimal();
         if(mate.getSex() == Sex.FEMALE){
 //            System.out.println("Mate action: impregnating");
             mate.setPregnant(true);
