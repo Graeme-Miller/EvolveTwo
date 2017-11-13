@@ -22,6 +22,7 @@ import com.mayorgraeme.animal.action.HungerAction;
 import com.mayorgraeme.animal.action.MateAction;
 import com.mayorgraeme.biome.Biome;
 import com.mayorgraeme.biome.StandardBiome;
+import com.mayorgraeme.biome.Vegetation;
 
 /**
  * Created by graememiller on 11/03/2017.
@@ -40,6 +41,9 @@ public class BiomeController {
 
     @Value("${vegetationNutrition}")
     private int vegetationNutrition;
+
+    @Value("${vegetationMaxCount}")
+    private int vegetationMaxCount;
 
     private Biome biome;
 
@@ -63,15 +67,22 @@ public class BiomeController {
 
     @PostConstruct
     public void init() {
-        biome  = new StandardBiome(vegetationSpawnRate, vegetationMaxAge ,vegetationNutrition);
+        biome  = new StandardBiome(vegetationSpawnRate, vegetationMaxAge ,vegetationNutrition, vegetationMaxCount);
+        System.out.println("Init called");
         (new UpdateThread()).start();
     }
 
 
-    @RequestMapping("/")
+    @RequestMapping("/animal")
     @ResponseBody
-    public Set<Animal> home() {
+    public Set<Animal> animals() {
         return biome.getAnimals();
+    }
+
+    @RequestMapping("/vegetation")
+    @ResponseBody
+    public Set<Vegetation> vegetation() {
+        return biome.getVegetation();
     }
 
 

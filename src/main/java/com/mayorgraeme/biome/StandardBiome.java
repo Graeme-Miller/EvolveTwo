@@ -17,11 +17,13 @@ public class StandardBiome implements Biome {
     private int vegetationSpawnRate;
     private int vegetationMaxAge;
     private int vegetationNutrition;
+    private int vegetationMaxCount;
 
-    public StandardBiome(int vegetationSpawnRate, int vegetationMaxAge, int vegetationNutrition) {
+    public StandardBiome(int vegetationSpawnRate, int vegetationMaxAge, int vegetationNutrition, int vegetationMaxCount) {
         this.vegetationSpawnRate = vegetationSpawnRate;
         this.vegetationMaxAge = vegetationMaxAge;
         this.vegetationNutrition = vegetationNutrition;
+        this.vegetationMaxCount = vegetationMaxCount;
 
         animals = new HashSet<>();
         vegetation = new HashSet<>();
@@ -41,7 +43,20 @@ public class StandardBiome implements Biome {
             vegetation.setAge(vegetation.getAge()+1);
         }
 
+        System.out.println("Vegetation? Spawnrate=" + vegetationSpawnRate);
         //TODO: need new vegetation spawn code
+
+        for (int i = 0; i < vegetationSpawnRate; i++) {
+            System.out.println("Vegetation? "+i + " " + this.vegetation.size() + "/"+vegetationMaxCount);
+            if(this.vegetation.size() < vegetationMaxCount) {
+                System.out.println("Vegetation? Adding");
+                Vegetation vegetationNew = new Vegetation(0, vegetationNutrition);
+                addVegetation(vegetationNew);
+            } else {
+                System.out.println("Vegetation? Breaking");
+                break;
+            }
+        }
 
         //Animal Process
         HashSet<Animal> animalsCopy = new HashSet<>(animals);
