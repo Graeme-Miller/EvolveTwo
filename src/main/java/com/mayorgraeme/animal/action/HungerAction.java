@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.mayorgraeme.animal.Animal;
-import com.mayorgraeme.biome.InhabitantCoordinates;
 import com.mayorgraeme.biome.Biome;
 import com.mayorgraeme.biome.Vegetation;
 import com.mayorgraeme.util.RandomUtil;
@@ -43,14 +42,12 @@ public class HungerAction implements Action {
 
     public boolean herbivore(Animal animal, Biome biome) {
         //TODO: This will mean we always eat from top right. Maybe randomise?
-        Optional<InhabitantCoordinates> inhabitantCoordinatesOptional = biome.getInhabitantCoordinatesStream(animal, animal.getMoveSpeed()).filter(inhabitantCoordinate ->
-            inhabitantCoordinate.getVegetation() != null
-        ).findFirst();
+        Optional<Vegetation> vegetationOptional = biome.getVegetation().stream().findFirst();
 
-        if(!inhabitantCoordinatesOptional.isPresent())
+        if(!vegetationOptional.isPresent())
             return false;
 
-        Vegetation vegetation = inhabitantCoordinatesOptional.get().getVegetation();
+        Vegetation vegetation = vegetationOptional.get();
         biome.removeVegetation(vegetation);
 
         animal.setHunger(animal.getHunger() + vegetation.getNutrition());
@@ -59,14 +56,8 @@ public class HungerAction implements Action {
     }
 
     public boolean carnivore(Animal animal, Biome biome) {
-        List<InhabitantCoordinates> dinnerOptions =
-                biome.getInhabitantCoordinatesStream(animal, animal.getMoveSpeed()).filter(inhabitantCoordinate -> {
-                    if (inhabitantCoordinate.getAnimal() == null)
-                        return false;
-            Animal animalInhabitant = inhabitantCoordinate.getAnimal();
-            return !animal.getSpeciesId().equals(animalInhabitant.getSpeciesId());
-
-                }
+        List<Animal> dinnerOptions =
+                biome.getAnimals().stream().filter(animalInhabitant -> !animal.getSpeciesId().equals(animalInhabitant.getSpeciesId())
         ).collect(Collectors.toList());
 
         System.out.println("Carnivore list size: "+dinnerOptions.size());
@@ -76,7 +67,7 @@ public class HungerAction implements Action {
         // weakest from list
         // a limit for how much defense they have
         // a function to try and balance cost to benefit using properties of animal
-        Animal randomFromList = (Animal)RandomUtil.getRandomFromList(dinnerOptions).getAnimal();
+        Animal randomFromList = (Animal)RandomUtil.getRandomFromList(dinnerOptions);
         biome.removeAnimal(randomFromList);
 
         animal.setHunger(animal.getHunger() + 100); //TODO should the amount of hunger gained be a function of how big the eaten animal is

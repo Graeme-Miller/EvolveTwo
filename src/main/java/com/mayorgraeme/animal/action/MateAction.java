@@ -7,7 +7,6 @@ import org.apache.commons.math3.stat.descriptive.moment.Mean;
 
 import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.animal.AnimalBuilder;
-import com.mayorgraeme.biome.InhabitantCoordinates;
 import com.mayorgraeme.animal.Sex;
 import com.mayorgraeme.biome.Biome;
 import com.mayorgraeme.util.RandomUtil;
@@ -47,12 +46,9 @@ public class MateAction implements Action {
         AnimalBuilder childBuilder = animal.getChildBuilder();
         animal.setChildBuilder(null);
 
-        biome.getInhabitantCoordinatesStream(animal, animal.getMoveSpeed())
-                .filter(inhabitantCoordinates -> inhabitantCoordinates.getAnimal() == null)
-                .limit(animal.getLitterSize()).forEach(inhabitantCoordinates -> {
-
-            biome.addAnimal(childBuilder.buildAnimal(), inhabitantCoordinates.getCoordinate());
-        });
+        for (int i = 0; i < animal.getLitterSize(); i++) {
+            biome.addAnimal(childBuilder.buildAnimal());
+        }
 
         return true;
     }
@@ -60,13 +56,8 @@ public class MateAction implements Action {
     public boolean performMatingAction(Animal animal, Biome biome){
 //        System.out.println("Mate action: trying to mate");
 
-        Optional<InhabitantCoordinates> inhabitantCoordinatesOptional = biome.getInhabitantCoordinatesStream(animal, animal.getMoveSpeed())
-                .filter(inhabitantCoordinates -> {
-
-                    if (inhabitantCoordinates.getAnimal() == null)
-                        return false;
-
-                    Animal filterAnimal = inhabitantCoordinates.getAnimal();
+        Optional<Animal> animalOptional = biome.getAnimals().stream()
+                .filter(filterAnimal -> {
                     return  !animal.isPregnant() &&
                             !filterAnimal.isPregnant() &&
                             filterAnimal.getAge() > filterAnimal.getMaturityAge() &&
@@ -75,13 +66,13 @@ public class MateAction implements Action {
                 }).findFirst();
 
 
-//        System.out.println("Mate action: found mate? "+inhabitantCoordinatesOptional);
-        if(!inhabitantCoordinatesOptional.isPresent()){
+//        System.out.println("Mate action: found mate? "+animalOptional);
+        if(!animalOptional.isPresent()){
 //            System.out.println("Mate action: no mate found returning");
             return false;
         }
 
-        Animal mate = inhabitantCoordinatesOptional.get().getAnimal();
+        Animal mate = animalOptional.get();
         if(mate.getSex() == Sex.FEMALE){
 //            System.out.println("Mate action: impregnating");
             mate.setPregnant(true);

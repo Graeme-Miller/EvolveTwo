@@ -1,24 +1,25 @@
 package com.mayorgraeme.web;
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.*;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.mayorgraeme.animal.Animal;
 import com.mayorgraeme.animal.Diet;
-import com.mayorgraeme.biome.InhabitantCoordinates;
 import com.mayorgraeme.animal.Sex;
 import com.mayorgraeme.animal.action.Action;
 import com.mayorgraeme.animal.action.AgeAction;
 import com.mayorgraeme.animal.action.HungerAction;
 import com.mayorgraeme.animal.action.MateAction;
-import com.mayorgraeme.animal.action.RandomMove;
 import com.mayorgraeme.biome.Biome;
 import com.mayorgraeme.biome.StandardBiome;
 
@@ -30,11 +31,6 @@ import com.mayorgraeme.biome.StandardBiome;
 @EnableAutoConfiguration
 public class BiomeController {
 
-    @Value("${xSize}")
-    private int xSize;
-
-    @Value("${ySize}")
-    private int ySize;
 
     @Value("${vegetationSpawnRate}")
     private int vegetationSpawnRate;
@@ -67,24 +63,15 @@ public class BiomeController {
 
     @PostConstruct
     public void init() {
-        biome  = new StandardBiome(xSize, ySize, vegetationSpawnRate, vegetationMaxAge ,vegetationNutrition);
+        biome  = new StandardBiome(vegetationSpawnRate, vegetationMaxAge ,vegetationNutrition);
         (new UpdateThread()).start();
     }
 
 
     @RequestMapping("/")
     @ResponseBody
-    public List<InhabitantCoordinates> home() {
-        InhabitantCoordinates[][] inhabitantMap = biome.getInhabitantMap();
-
-        ArrayList<InhabitantCoordinates> list = new ArrayList(xSize*ySize);
-        for (InhabitantCoordinates[] inhabitantCoordinates : inhabitantMap) {
-            for (InhabitantCoordinates inhabitantCoordinate : inhabitantCoordinates) {
-                list.add(inhabitantCoordinate);
-            }
-        }
-
-        return list;
+    public Set<Animal> home() {
+        return biome.getAnimals();
     }
 
 
@@ -124,7 +111,6 @@ public class BiomeController {
         actions.add(new AgeAction());
         actions.add(new HungerAction());
         actions.add(new MateAction());
-        actions.add(new RandomMove());
 
         Animal animal = new Animal(sex, diet, actions, moveSpeedPercentage, speciesId, false, 0, maturityAgePercentage, gestationSpeedPercentage, litterSizePercentage, maxAgePercentage, 0, 100, metabolismPercentage, hungerLimitToEatPercentage, null, geneticMutationPercentage);
         synchronized(biome) {
