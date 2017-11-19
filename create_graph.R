@@ -1,0 +1,20 @@
+#!/usr/bin/env Rscript
+args <- commandArgs(TRUE)
+## Read the input data
+a<-read.csv(args[1], sep=",",head=TRUE)
+
+
+## Set the output file name/type
+pdf(file="output.pdf")
+## Plot your data
+plot(a$tick,a$moveSpeedPercentage,ylab="moveSpeedPercentage",xlab="tick")
+plot(a$tick,a$maturityAgePercentage,ylab="maturityAgePercentage",xlab="tick")
+plot(a$tick,a$gestationSpeedPercentage,ylab="gestationSpeedPercentage",xlab="tick")
+plot(a$tick,a$litterSizePercentage,ylab="litterSizePercentage",xlab="tick")
+plot(a$tick,a$maxAgePercentage,ylab="maxAgePercentage",xlab="tick")
+plot(a$tick,a$metabolismPercentage,ylab="metabolismPercentage",xlab="tick")
+plot(a$tick,a$hungerLimitToEatPercentage,ylab="hungerLimitToEatPercentage",xlab="tick")
+
+
+## Close the graphics device (write to the output file)
+dev.off()
