@@ -1,5 +1,7 @@
 package com.mayorgraeme.animal.action;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -47,7 +49,9 @@ public class MateAction implements Action {
         animal.setChildBuilder(null);
 
         for (int i = 0; i < animal.getLitterSize(); i++) {
-            biome.addAnimal(childBuilder.buildAnimal());
+            Animal child = childBuilder.buildAnimal();
+            System.out.println("Animal born percentage, "+ LocalDateTime.now() + ", " +child.getPercentageString());
+            biome.addAnimal(child);
         }
 
         return true;
@@ -128,7 +132,11 @@ public class MateAction implements Action {
         int result = Math.round((long)mean.getResult());
 
         if (RandomUtil.shouldPeformAction(geneticMutationPercentage)) {
-            result += random.nextInt(6);
+            if(RandomUtil.shouldPeformAction(50)) { //choose if increasing or decreasing
+                result += random.nextInt(6);
+            } else {
+                result -= random.nextInt(6);
+            }
         }
 
         return Math.min(Math.max(0, result), 100); //bound between

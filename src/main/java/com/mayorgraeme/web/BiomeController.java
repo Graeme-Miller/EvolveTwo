@@ -73,6 +73,15 @@ public class BiomeController {
     }
 
 
+    @RequestMapping("/info")
+    @ResponseBody
+    public String info() {
+        int animalSize = biome.getAnimals().size();
+        int vegetationSize = biome.getVegetation().size();
+
+        return animalSize+ ","+ vegetationSize;
+    }
+
     @RequestMapping("/animal")
     @ResponseBody
     public Set<Animal> animals() {

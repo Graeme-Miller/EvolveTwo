@@ -242,32 +242,41 @@ public class Animal {
         return id.hashCode();
     }
 
+    public String getPercentageString() {
+        return  moveSpeedPercentage +
+                "," + maturityAgePercentage +
+                "," + gestationSpeedPercentage +
+                "," + litterSizePercentage +
+                "," + maxAgePercentage +
+                "," + metabolismPercentage +
+                "," + hungerLimitToEatPercentage;
+    }
+
     @Override
     public String toString() {
         return "Animal{" +
-                "sex=" + sex +
-                ", diet=" + diet +
-                ", actions=" + actions +
-                ", id=" + id +
-                ", speciesId=" + speciesId +
-                ", moveSpeedPercentage=" + moveSpeedPercentage +
-                ", moveSpeed=" + moveSpeed +
-                ", isPregnant=" + isPregnant +
-                ", pregnancyCountdown=" + pregnancyCountdown +
-                ", maturityAgePercentage=" + maturityAgePercentage +
-                ", maturityAge=" + maturityAge +
-                ", gestationSpeedPercentage=" + gestationSpeedPercentage +
-                ", litterSizePercentage=" + litterSizePercentage +
-                ", gestationSpeed=" + gestationSpeed +
-                ", litterSize=" + litterSize +
-                ", maxAgePercentage=" + maxAgePercentage +
-                ", maxAge=" + maxAge +
-                ", age=" + age +
-                ", hunger=" + hunger +
-                ", metabolismPercentage=" + metabolismPercentage +
-                ", metabolism=" + metabolism +
-                ", hungerLimitToEatPercentage=" + hungerLimitToEatPercentage +
-                ", hungerLimitToEat=" + hungerLimitToEat +
+                "sex," + sex +
+                ", diet," + diet +
+                ", id," + id +
+                ", speciesId," + speciesId +
+                ", moveSpeedPercentage," + moveSpeedPercentage +
+                ", moveSpeed," + moveSpeed +
+                ", isPregnant," + isPregnant +
+                ", pregnancyCountdown," + pregnancyCountdown +
+                ", maturityAgePercentage," + maturityAgePercentage +
+                ", maturityAge," + maturityAge +
+                ", gestationSpeedPercentage," + gestationSpeedPercentage +
+                ", litterSizePercentage," + litterSizePercentage +
+                ", gestationSpeed," + gestationSpeed +
+                ", litterSize," + litterSize +
+                ", maxAgePercentage," + maxAgePercentage +
+                ", maxAge," + maxAge +
+                ", age," + age +
+                ", hunger," + hunger +
+                ", metabolismPercentage," + metabolismPercentage +
+                ", metabolism," + metabolism +
+                ", hungerLimitToEatPercentage," + hungerLimitToEatPercentage +
+                ", hungerLimitToEat," + hungerLimitToEat +
                 '}';
     }
 }

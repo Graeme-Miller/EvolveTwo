@@ -2,7 +2,8 @@ import docker, requests, time, random, subprocess, datetime
 
 
 client = docker.from_env()
-numberToCreate = 5
+numberToCreate = 1
+host="http://35.176.250.88"
 
 def addAnimals(url, speciesId, number, diet):
 
@@ -48,13 +49,13 @@ def addVegetation(url):
       # print "exception checking status, ignoring"
 
     #Set vegetation
-    vegetationSpawnRate = random.randint(1, 150)
-    vegetationMaxAge = random.randint(1, 50)
-    vegetationNutrition = random.randint(1, 100)
+    # vegetationSpawnRate = random.randint(1, 150)
+    # vegetationMaxAge = random.randint(1, 50)
+    # vegetationNutrition = random.randint(1, 100)
     #print "setting vegetation for url {}. vegetationSpawnRate {} vegetationMaxAge {} vegetationNutrition {}".format(url, vegetationSpawnRate, vegetationMaxAge, vegetationNutrition)
-    r = requests.put(url+"/vegetationSpawnRate", data={'vegetationSpawnRate': vegetationSpawnRate})
-    r = requests.put(url+"/vegetationMaxAge", data={'vegetationMaxAge': vegetationMaxAge})
-    r = requests.put(url+"/vegetationNutrition", data={'vegetationNutrition': vegetationNutrition})
+    # r = requests.put(url+"/vegetationSpawnRate", data={'vegetationSpawnRate': vegetationSpawnRate})
+    # r = requests.put(url+"/vegetationMaxAge", data={'vegetationMaxAge': vegetationMaxAge})
+    # r = requests.put(url+"/vegetationNutrition", data={'vegetationNutrition': vegetationNutrition})
 
 
 print "starting containers"
@@ -67,50 +68,53 @@ for x in range(0, numberToCreate):
 print "adding vegetation"
 for x in range(0, numberToCreate):   
     portToExpose = '9%03d'%x
-    url = 'http://localhost:%s'%portToExpose
-    addVegetation(url)
+    url = host+":"+portToExpose
+    # addVegetation(url)
 
 print "waiting for vegetation to grow"
 time.sleep(20) #allow vegetation to develop    
 print "adding animals"
 for x in range(0, numberToCreate):   
     portToExpose = '9%03d'%x        
-    url = 'http://localhost:%s'%portToExpose    
+    url = host+":"+portToExpose
         
     #Add herbivores
     addAnimals(url, "herb-1", random.randint(50, 100), "HERBIVORE")
     addAnimals(url, "herb-2", random.randint(50, 100), "HERBIVORE")
     addAnimals(url, "herb-3", random.randint(50, 100), "HERBIVORE")
 
-    addAnimals(url, "carn-3", random.randint(50, 100), "CARNIVORE")
+    # addAnimals(url, "carn-3", random.randint(50, 100), "CARNIVORE")
     
 print "------------------------Started------------------------"    
 
 while (True):
     for x in range(0, numberToCreate):
         portToExpose = '9%03d'%x
-        url = 'http://localhost:%s'%portToExpose
-                
-        totalAnimals = subprocess.check_output("curl -s "+url+" | jq 'map(select(.animal != null))' | jq '.[]|.animal.age' | wc -l", shell=True).rstrip()
-        herbivores =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.animal.diet == \"HERBIVORE\"))' | jq '.[]|.animal.age' | wc -l", shell=True).rstrip()
-        carnivores =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.animal.diet == \"CARNIVORE\"))' | jq '.[]|.animal.age' | wc -l", shell=True).rstrip()
-        vegitation =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.vegetation != null))' | jq '.[]|.vegetation.age' | wc -l", shell=True).rstrip()
-        pregnant =     subprocess.check_output("curl -s "+url+" | jq 'map(select(.animal != null))' | jq 'map(select(.animal.pregnancyCountdown != 0))' | jq '.[]|.animal.age' | wc -l", shell=True).rstrip()
+        url = host+":"+portToExpose
+        #totalAnimals = subprocess.check_output("curl -s "+url+"/animal | jq '.[] |.animal.age' | wc -l", shell=True).rstrip()
+        # herbivores =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.animal.diet == \"HERBIVORE\"))' | jq '.[]|.animal.age' | wc -l", shell=True).rstrip()
+        # carnivores =   subprocess.check_output("curl -s "+url+" | jq 'map(select(.animal.diet == \"CARNIVORE\"))' | jq '.[]|.animal.age' | wc -l", shell=True).rstrip()
+        #vegitation =   subprocess.check_output("curl -s "+url+"/vegetation | jq '.[]|.vegetation.age' | wc -l", shell=True).rstrip()
+        # pregnant =     subprocess.check_output("curl -s "+url+" | jq 'map(select(.animal != null))' | jq 'map(select(.animal.pregnancyCountdown != 0))' | jq '.[]|.animal.age' | wc -l", shell=True).rstrip()
 
-        print "{}: time started={}\ttotal animals={}\therbivores={}\tcarnivores={}\tvegitation={}\tpregnant={}".format(portToExpose, containerDictionary[portToExpose], totalAnimals,herbivores,carnivores,vegitation, pregnant)
+        #print "{}: time started={}\ttotal animals={}\therbivores={}\tcarnivores={}\tvegitation={}\tpregnant={}".format(portToExpose, containerDictionary[portToExpose], totalAnimals,0,0,vegitation, 0)
 
-        if(int(carnivores) == 0):
-            command = "docker ps -a | grep \"0.0.0.0:"+portToExpose+"->8080\" |  awk \'{print $1 }\' | xargs -I {} docker rm -f {}"
-            subprocess.check_output(command, shell=True)
-            containerDictionary[portToExpose] = datetime.datetime.now().time()
-            client.containers.run("evotwo", detach=True, ports={8080: portToExpose})
 
-            addVegetation(url)
-            addAnimals(url, "herb-1", random.randint(900, 1000), "HERBIVORE")
+        info = subprocess.check_output("curl -s "+url+"/info", shell=True).rstrip()
+        print str(datetime.datetime.utcnow()) +"," + info
 
-            addAnimals(url, "carn-3", random.randint(190, 200), "CARNIVORE")
+        # if(int(carnivores) == 0):
+        #     command = "docker ps -a | grep \"0.0.0.0:"+portToExpose+"->8080\" |  awk \'{print $1 }\' | xargs -I {} docker rm -f {}"
+        #     subprocess.check_output(command, shell=True)
+        #     containerDictionary[portToExpose] = datetime.datetime.now().time()
+        #     client.containers.run("evotwo", detach=True, ports={8080: portToExpose})
+        #
+        #     addVegetation(url)
+        #     addAnimals(url, "herb-1", random.randint(900, 1000), "HERBIVORE")
+        #
+        #     addAnimals(url, "carn-3", random.randint(190, 200), "CARNIVORE")
 
-    print "------------------------CHECK------------------------"
+    # print "------------------------CHECK------------------------"
     time.sleep(2)
         
         
